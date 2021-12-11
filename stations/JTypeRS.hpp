@@ -2,7 +2,7 @@
 #define JTypeRS_H
 #include "RS.hpp"
 
-struct JTypeRS : public RS
+struct JTypeRS : public rs
 {
     uint _imm;
 };

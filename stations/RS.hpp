@@ -2,19 +2,21 @@
 #define RS_H
 #include "common.hpp"
 
-struct RS // base reservation station
+struct rs // base reservation station
 {
-    std::string _name;
-    bool _busy;
-    ushort _op;
+    int cycle_count_;
+    std::string name_;
+    bool busy_;
+    ushort op_;
+    ushort rd_;
 
-    ushort _Vj;
-    ushort _Qj;
+    ushort Vj_;
+    ushort Qj_;
 
-    ushort _Vk;
-    ushort _Qk;
+    ushort Vk_;
+    ushort Qk_;
 
-    ushort _Addres;
+    ushort A_;
 };
 
 #endif

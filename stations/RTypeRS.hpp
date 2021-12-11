@@ -2,7 +2,8 @@
 #define RTypeRS_H
 #include "RS.hpp"
 
-struct RTypeRS : public RS
+// DIV,ADD
+struct RTypeRS : public rs
 {
 
     ushort _Vj;

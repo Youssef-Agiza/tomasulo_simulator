@@ -2,7 +2,7 @@
 #define ITypeRS_H
 #include "RS.hpp"
 
-struct ITypeRS : public RS
+struct ITypeRS : public rs
 {
     uint _imm;
     ushort _Vj;
