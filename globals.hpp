@@ -1,13 +1,16 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 #include "common.hpp"
-#include "instruction.hpp"
+
+#include "rs.hpp"
+#include "mem.hpp"
+#include "regs.hpp"
 #include "cdb.hpp"
 
-extern std::vector<instruction> inst_mem; 
-extern std::deque<struct CDB> cdb;
- 
-extern int PC ;
-extern int cycles; 
+extern int PC;
+extern int cycles;
 extern bool stall;
-#endif 
+extern bool finished;
+extern bool issued_branch;
+
+#endif

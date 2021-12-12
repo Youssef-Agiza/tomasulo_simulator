@@ -41,4 +41,17 @@ extern void wb_abs(rs *);
 extern void initalize_station_name(std::vector<rs> &stations, const std::string &base_name);
 extern void initalize_rstable();
 
+// decode.cpp
+extern void fetch_instructions(const std::string &file_name);
+extern ushort decode_reg(const std::string &reg_str);
+extern void decode_line(const std::string &line, instruction &inst);
+
+// utils.cpp
+extern void emit_error(const std::string &err);
+extern void toupper(std::string &str);
+extern void try_issue(instruction &inst);
+extern void update_stations();
+extern void broadcast();
+extern void update_finished();
+
 #endif

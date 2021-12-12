@@ -38,8 +38,8 @@ std::vector<rs> RSTable::neg;
 std::vector<rs> RSTable::abs;
 std::vector<rs> RSTable::div;
 
-rs::rs(uint exec_cycles, uint wb_cycles, void (*issue)(rs *), bool (*exec)(rs *), void (*wb)(rs *)) : name_("Default"), exec_cycles_(exec_cycles), wb_cycles_(wb_cycles),
-                                                                                                      issue_(issue), can_exec_(exec), wb_(wb)
+rs::rs(uint nc_exec, uint nc_wb, void (*issue)(rs *), bool (*exec)(rs *), void (*wb)(rs *)) : name_("Default"), nc_exec_(nc_exec), nc_wb_(nc_wb),
+                                                                                              issue_(issue), can_exec_(exec), wb_(wb)
 {
     this->reset();
 }
@@ -47,8 +47,8 @@ rs::rs(uint exec_cycles, uint wb_cycles, void (*issue)(rs *), bool (*exec)(rs *)
 void rs::print()
 {
     using std::setw;
-    std::cout << "Name" << setw(10) << "Busy" << setw(10) << "OP" << setw(10) << "Vj" << setw(10) << "Vk" << setw(10) << "Qj" << setw(10) << "Qk" << setw(10) << "A\n";
-    std::cout << name_ << setw(10) << (busy_ ? "T" : "F") << setw(10) << op_ << setw(10) << Vj_ << setw(10) << Vk_ << setw(10) << Qj_ << setw(10) << Qk_ << setw(10) << A_ << "\n";
+    std::cout << "Name" << setw(10) << setw(10) << "OP" << setw(10) << "Vj" << setw(10) << "Vk" << setw(10) << "Qj" << setw(10) << "Qk" << setw(10) << "A\n";
+    std::cout << name_ << setw(10) << setw(10) << op_ << setw(10) << Vj_ << setw(10) << Vk_ << setw(10) << Qj_ << setw(10) << Qk_ << setw(10) << A_ << "\n";
 }
 
 void rs::reset()
@@ -57,7 +57,6 @@ void rs::reset()
     inst_ = nullptr;
 
     cycles_counter_ = 0;
-    busy_ = false;
 
     Vj_ = -1;
     Qj_ = nullptr;
@@ -71,18 +70,24 @@ void rs::update()
     {
     case IDLE:
         return;
-    case BUSY: // issued didn't start_exec
+    case BUSY: // issued didn't start exec
     {
+        cycles_counter_++;
         if (can_exec_(this))
+        {
+            this->inst_->exec_start_cycle = cycles_counter_ + this->inst_->issue_cycle;
             this->state_ = EXECUTING;
+            cycles_counter_ = 0;
+        }
         return;
     };
 
     case EXECUTING:
     {
 
-        if (cycles_counter_++ >= exec_cycles_)
+        if (++cycles_counter_ >= nc_exec_)
         {
+            this->inst_->exec_finish_cycle = cycles_counter_ + this->inst_->exec_start_cycle;
             this->state_ = WRITING;
             cycles_counter_ = 0;
         }
@@ -91,14 +96,14 @@ void rs::update()
 
     case WRITING:
     {
-        if (cycles_counter_ >= wb_cycles_ && cdb::available)
+        if (++cycles_counter_ >= nc_wb_ && cdb::available)
         {
+            this->inst_->wb_cycle = cycles_counter_ + this->inst_->exec_finish_cycle;
             cdb::available = false;
             wb_(this);
             reset();
         }
-        else
-            cycles_counter_++;
+
         return;
     }
 

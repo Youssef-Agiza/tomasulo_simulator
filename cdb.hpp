@@ -10,10 +10,6 @@ struct cdb
     static bool available;
 };
 
-bool cdb::available = true;
-ushort cdb::rd = -1;
-rs *cdb::st = nullptr
-
 // extern std::deque<struct CDB> cdb;
 
 #endif

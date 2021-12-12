@@ -7,21 +7,23 @@ void wb_store(rs *st) {}
 void wb_beq(rs *st) {}
 void wb_add_addi(rs *st)
 {
-    st->print();
+#ifdef DEBUGGING
+    // st->print();
+#endif
     for (int i = 0; i < REGFILE_SIZE; i++)
         if (regstat[i].Qi == st)
         {
             switch (st->op_)
             {
             case ADD_OP:
-                regs[i] = st->Vj_ + st->Vk_;
+                cdb::rd = st->Vj_ + st->Vk_;
                 break;
 
             case ADDI_OP:
-                regs[i] = st->Vj_ + st->imm_;
+                cdb::rd = st->Vj_ + st->imm_;
                 break;
             }
-            regstat[i].Qi = nullptr;
+            cdb::st = st;
             return;
         }
 }

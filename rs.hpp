@@ -50,13 +50,13 @@ class rs //  reservation station
 public:
     struct instruction *inst_;
     enum rsstate state_;
-    uint cycles_counter_;
-    uint exec_cycles_;
-    uint wb_cycles_;
+    int cycles_counter_;
+
+    // number of cycles needed for exec and wb
+    int nc_exec_;
+    int nc_wb_;
 
     std::string name_;
-    bool busy_;
-    bool finished_exec_;
     ushort op_;
 
     ushort Vj_;

@@ -2,6 +2,8 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
+#define DEBUGGING
+
 #define ADD_OP 0x0
 #define ADDI_OP 0x1
 #define JAL_OP 0x2
@@ -36,6 +38,5 @@
 #define DEFAULT_NC_WB_NEG 1
 #define DEFAULT_NC_WB_ABS 1
 #define DEFAULT_NC_WB_DIV 1
-
 
 #endif
