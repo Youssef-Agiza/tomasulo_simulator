@@ -5,16 +5,7 @@
 #include "instruction.hpp"
 #include "defs.hpp"
 #include "cdb.hpp"
-
-ushort regs[REGFILE_SIZE];
-uint mem[MEMORY_SIZE];
-std::vector<instruction> inst_mem;
-struct RegStat regstat[REGFILE_SIZE];
-
-std::deque<struct CDB> cdb;
-
-int PC = 0;
-int cycles = 0;
+#include "globals.hpp"
 
 void emit_error(const std::string &err)
 {
@@ -94,6 +85,7 @@ void decode_line(const std::string &line, instruction &inst)
         inst.imm = std::stoi(imm);
 		inst.rs1 = decode_reg(rs1);
     }
+    inst.print();
 }
 
 void try_issue(instruction &inst)
@@ -254,7 +246,7 @@ int main()
     {
         cycles++;
         update_stations();
-        if (PC < inst_mem.size())
+        if (PC < inst_mem.size()&&!stall)
             try_issue(inst_mem[PC]);
     }
     std::cout << regs[2] << "  " << regs[5] << "  " << regs[3] << "\n";

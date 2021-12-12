@@ -9,7 +9,7 @@ struct CDB
     ushort rd;
     static bool available;
 };
-bool CDB::available = true;
+// bool CDB::available = true;
 extern std::deque<struct CDB> cdb;
 
 #endif
