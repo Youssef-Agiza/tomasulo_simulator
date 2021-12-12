@@ -1,4 +1,4 @@
-HEADERS= common.hpp mem.hpp regs.hpp rs.hpp types.hpp instruction.hpp defs.hpp
+HEADERS= common.hpp mem.hpp regs.hpp rs.hpp types.hpp instruction.hpp defs.hpp cdb.hpp
 SRCS= main.cpp rs.cpp exec.cpp issue.cpp wb.cpp
 GCC= g++
 FLAGS= -g 

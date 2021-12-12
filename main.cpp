@@ -4,10 +4,14 @@
 #include "rs.hpp"
 #include "instruction.hpp"
 #include "defs.hpp"
+#include "cdb.hpp"
+
 ushort regs[REGFILE_SIZE];
 uint mem[MEMORY_SIZE];
 std::vector<instruction> inst_mem;
 struct RegStat regstat[REGFILE_SIZE];
+
+std::deque<struct CDB> cdb;
 
 int PC = 0;
 int cycles = 0;
@@ -95,7 +99,7 @@ void fetch_instructions(const std::string &file_name)
     inf.close();
 }
 
-void execute_stations()
+void update_stations()
 {
 
     // for (auto &st : rstable.load)
@@ -121,6 +125,54 @@ void execute_stations()
 
     // for (auto &st : rstable.neg)
     //     st.update();
+}
+
+void broadcast_station(CDB &c, rs &st)
+{
+    if (c.st == st.Qk_)
+    {
+        st.Qk_ = nullptr;
+        st.Vk_ = c.rd;
+    }
+    else if (c.st == st.Qj_)
+    {
+        st.Qj_ = nullptr;
+        st.Vj_ = c.rd;
+    }
+}
+
+void broadcast()
+{
+    if (cdb.empty())
+        return;
+
+    // for (auto c : cdb)
+    // {
+    //     for (auto &st : rstable.load)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.store)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.add_addi)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.abs)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.beq)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.div)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.jal_jalr)
+    //         broadcast_station(c, st);
+
+    //     for (auto &st : rstable.neg)
+    //         broadcast_station(c, st);
+    // }
+    // cdb.pop_back();
 }
 
 bool finished()
@@ -174,7 +226,7 @@ int main()
     while (!finished())
     {
         cycles++;
-        execute_stations();
+        update_stations();
         if (PC < inst_mem.size())
             try_issue(inst_mem[PC]);
     }

@@ -11,6 +11,7 @@
 #include <sstream>
 #include <vector>
 #include <stdexcept>
+#include <deque>
 
 #include "types.hpp"
 

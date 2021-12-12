@@ -21,6 +21,7 @@ void wb_add_addi(rs *st)
                 regs[i] = st->Vj_ + st->imm_;
                 break;
             }
+            regstat[i].Qi = nullptr;
             return;
         }
 }

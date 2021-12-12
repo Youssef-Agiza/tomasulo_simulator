@@ -28,7 +28,7 @@ int NC_WB_NEG = DEFAULT_NC_WB_NEG;
 int NC_WB_ABS = DEFAULT_NC_WB_ABS;
 int NC_WB_DIV = DEFAULT_NC_WB_DIV;
 
-RSTable rstable;
+struct RSTable rstable;
 std::vector<rs> RSTable::load;
 std::vector<rs> RSTable::store;
 std::vector<rs> RSTable::beq;

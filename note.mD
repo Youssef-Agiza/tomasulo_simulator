@@ -74,3 +74,11 @@ Buffers used to:
 - store the values of the operands that are ready and the units producing those who are not.
 - **keep track** of operation readiness.
 -
+
+# To do
+
+- [ ] Instruction should keep track of cycles in which it was issued, executed(start and end), and written back
+- [ ]  find a way to broadcast the write back to other rs
+- [ ]  parsing the remaining instructions
+- [ ]  reading and writing from and to the memory
+- [ ]  
