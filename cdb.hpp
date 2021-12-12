@@ -3,13 +3,17 @@
 #include "common.hpp"
 #include "rs.hpp"
 
-struct CDB
+struct cdb
 {
-    rs *st;
-    ushort rd;
+    static rs *st;
+    static ushort rd;
     static bool available;
 };
-bool CDB::available = true;
-extern std::deque<struct CDB> cdb;
+
+bool cdb::available = true;
+ushort cdb::rd = -1;
+rs *cdb::st = nullptr
+
+// extern std::deque<struct CDB> cdb;
 
 #endif

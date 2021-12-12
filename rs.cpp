@@ -91,11 +91,14 @@ void rs::update()
 
     case WRITING:
     {
-        if (cycles_counter_++ >= wb_cycles_)
+        if (cycles_counter_ >= wb_cycles_ && cdb::available)
         {
+            cdb::available = false;
             wb_(this);
             reset();
         }
+        else
+            cycles_counter_++;
         return;
     }
 

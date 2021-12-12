@@ -28,13 +28,14 @@
 #define DEFAULT_NC_EXEC_DIV 10
 
 // number of write back cycles for each station
-#define DEFAULT_NC_WB_LOAD 2;
-#define DEFAULT_NC_WB_STORE 2;
-#define DEFAULT_NC_WB_BEQ 1;
-#define DEFAULT_NC_WB_JAL 1;
-#define DEFAULT_NC_WB_ADD 1;
-#define DEFAULT_NC_WB_NEG 1;
-#define DEFAULT_NC_WB_ABS 1;
-#define DEFAULT_NC_WB_DIV 1;
+#define DEFAULT_NC_WB_LOAD 2
+#define DEFAULT_NC_WB_STORE 2
+#define DEFAULT_NC_WB_BEQ 1
+#define DEFAULT_NC_WB_JAL 1
+#define DEFAULT_NC_WB_ADD 1
+#define DEFAULT_NC_WB_NEG 1
+#define DEFAULT_NC_WB_ABS 1
+#define DEFAULT_NC_WB_DIV 1
+
 
 #endif

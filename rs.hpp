@@ -4,6 +4,7 @@
 #include "params.h"
 #include "defs.hpp"
 #include "instruction.hpp"
+#include "cdb.hpp"
 
 // number of stations for each unit
 extern int N_LOAD;

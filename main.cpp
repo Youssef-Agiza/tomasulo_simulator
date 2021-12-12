@@ -5,16 +5,7 @@
 #include "instruction.hpp"
 #include "defs.hpp"
 #include "cdb.hpp"
-
-ushort regs[REGFILE_SIZE];
-uint mem[MEMORY_SIZE];
-std::vector<instruction> inst_mem;
-struct RegStat regstat[REGFILE_SIZE];
-
-std::deque<struct CDB> cdb;
-
-int PC = 0;
-int cycles = 0;
+#include "globals.hpp"
 
 void emit_error(const std::string &err)
 {
@@ -42,6 +33,10 @@ void decode_line(const std::string &line, instruction &inst)
 {
     std::stringstream ss(line);
     // std::cout << "inst" << cycles++ << ": ";
+    inst.rs1 = -1;
+    inst.rs2 = -1;
+    inst.rd = -1;
+
     std::string name, rs1, rs2, rd, imm;
     ss >> name;
 
@@ -67,33 +62,34 @@ void decode_line(const std::string &line, instruction &inst)
         inst.rs1 = decode_reg(rs1);
         inst.imm = std::stoi(imm);
     }
-	if (name == "LOAD")
+    if (name == "LOAD")
     {
         ss >> rd >> imm >> rs1;
         inst.rd = decode_reg(rd);
         inst.imm = std::stoi(imm);
-		inst.rs1 = decode_reg(rs1);
+        inst.rs1 = decode_reg(rs1);
     }
-	if (name == "JAL")
+    if (name == "JAL")
     {
         ss >> rd >> imm;
         inst.rd = decode_reg(rd);
         inst.imm = std::stoi(imm);
     }
-	if (name == "STORE")
+    if (name == "STORE")
     {
         ss >> rs2 >> imm >> rs1;
         inst.rs2 = decode_reg(rs2);
         inst.imm = std::stoi(imm);
-		inst.rs1 = decode_reg(rs1);
+        inst.rs1 = decode_reg(rs1);
     }
-	if (name == "BEQ")
+    if (name == "BEQ")
     {
         ss >> rs1 >> rs2 >> imm;
         inst.rs2 = decode_reg(rs2);
         inst.imm = std::stoi(imm);
-		inst.rs1 = decode_reg(rs1);
+        inst.rs1 = decode_reg(rs1);
     }
+    inst.print();
 }
 
 void try_issue(instruction &inst)
@@ -116,6 +112,8 @@ void fetch_instructions(const std::string &file_name)
         emit_error("Couldn't open file");
 
     std::string line, inst;
+
+    instruction::print_header();
     while (std::getline(inf, line))
     {
         instruction new_inst;
@@ -129,77 +127,73 @@ void fetch_instructions(const std::string &file_name)
 void update_stations()
 {
 
-    // for (auto &st : rstable.load)
-    //     st.update();
+    for (auto &st : rstable.load)
+        st.update();
 
-    // for (auto &st : rstable.store)
-    //     st.update();
+    for (auto &st : rstable.store)
+        st.update();
 
     for (auto &st : rstable.add_addi)
         st.update();
 
-    // for (auto &st : rstable.abs)
-    //     st.update();
+    for (auto &st : rstable.abs)
+        st.update();
 
-    // for (auto &st : rstable.beq)
-    //     st.update();
+    for (auto &st : rstable.beq)
+        st.update();
 
-    // for (auto &st : rstable.div)
-    //     st.update();
+    for (auto &st : rstable.div)
+        st.update();
 
-    // for (auto &st : rstable.jal_jalr)
-    //     st.update();
+    for (auto &st : rstable.jal_jalr)
+        st.update();
 
-    // for (auto &st : rstable.neg)
-    //     st.update();
+    for (auto &st : rstable.neg)
+        st.update();
 }
 
-void broadcast_station(CDB &c, rs &st)
+void broadcast_station(rs &st)
 {
-    if (c.st == st.Qk_)
+    if (cdb::st == st.Qk_)
     {
         st.Qk_ = nullptr;
-        st.Vk_ = c.rd;
+        st.Vk_ = cdb::rd;
     }
-    else if (c.st == st.Qj_)
+    else if (cdb::st == st.Qj_)
     {
         st.Qj_ = nullptr;
-        st.Vj_ = c.rd;
+        st.Vj_ = cdb::rd;
     }
 }
 
 void broadcast()
 {
-    if (cdb.empty())
+    if (cdb::available) // nothing to broadcast
         return;
 
-    // for (auto c : cdb)
-    // {
-    //     for (auto &st : rstable.load)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.load)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.store)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.store)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.add_addi)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.add_addi)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.abs)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.abs)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.beq)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.beq)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.div)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.div)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.jal_jalr)
-    //         broadcast_station(c, st);
+    for (auto &st : rstable.jal_jalr)
+        broadcast_station(st);
 
-    //     for (auto &st : rstable.neg)
-    //         broadcast_station(c, st);
-    // }
-    // cdb.pop_back();
+    for (auto &st : rstable.neg)
+        broadcast_station(st);
 }
 
 bool finished()
@@ -254,7 +248,7 @@ int main()
     {
         cycles++;
         update_stations();
-        if (PC < inst_mem.size())
+        if (PC < inst_mem.size()&&!stall)
             try_issue(inst_mem[PC]);
     }
     std::cout << regs[2] << "  " << regs[5] << "  " << regs[3] << "\n";
