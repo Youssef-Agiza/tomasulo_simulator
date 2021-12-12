@@ -4,4 +4,4 @@ GCC= g++
 FLAGS= -g 
 
 tomasulo: $(HEADERS) $(SRCS)
-		$(GCC) $(SRCS) $(FLAGS) -o tomasulo
+		$(GCC) $(SRCS) $(FLAGS) -o tomasulo.exe

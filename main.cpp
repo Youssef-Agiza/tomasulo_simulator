@@ -54,7 +54,7 @@ void decode_line(const std::string &line, instruction &inst)
         inst.rs1 = decode_reg(rs1);
         inst.rs2 = decode_reg(rs2);
     }
-    if (name == "NEG" || name == "ABS")
+    if (name == "NEG" || name == "ABS" || name == "JALR")
     {
         ss >> rd >> rs1;
         inst.rd = decode_reg(rd);
@@ -66,6 +66,33 @@ void decode_line(const std::string &line, instruction &inst)
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
         inst.imm = std::stoi(imm);
+    }
+	if (name == "LOAD")
+    {
+        ss >> rd >> imm >> rs1;
+        inst.rd = decode_reg(rd);
+        inst.imm = std::stoi(imm);
+		inst.rs1 = decode_reg(rs1);
+    }
+	if (name == "JAL")
+    {
+        ss >> rd >> imm;
+        inst.rd = decode_reg(rd);
+        inst.imm = std::stoi(imm);
+    }
+	if (name == "STORE")
+    {
+        ss >> rs2 >> imm >> rs1;
+        inst.rs2 = decode_reg(rs2);
+        inst.imm = std::stoi(imm);
+		inst.rs1 = decode_reg(rs1);
+    }
+	if (name == "BEQ")
+    {
+        ss >> rs1 >> rs2 >> imm;
+        inst.rs2 = decode_reg(rs2);
+        inst.imm = std::stoi(imm);
+		inst.rs1 = decode_reg(rs1);
     }
 }
 
