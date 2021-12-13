@@ -18,7 +18,12 @@ static void save_wb_cycle(rs *st){
 }
 
 void exec_load(rs *st) {}
-void exec_store(rs *st) {}
+void exec_store(rs *st)
+{
+    st->res = st->Vj_ + st->imm_;
+        save_wb_cycle(st);
+
+}
 void exec_beq(rs *st) {}
 void exec_add_addi(rs *st)
 {
