@@ -56,13 +56,15 @@ extern bool can_exec_neg(rs *);
 extern bool can_exec_abs(rs *);
 
 // wb.cpp
-extern void wb_load(rs *);
-extern void wb_store(rs *);
-extern void wb_beq(rs *);
-extern void wb_add_addi(rs *);
-extern void wb_div(rs *);
-extern void wb_jal_jalr(rs *);
-extern void wb_neg(rs *);
-extern void wb_abs(rs *);
+extern void wb_mem(rs *);
+extern void wb_regfile(rs*);
+// extern void wb_load(rs *);
+// extern void wb_store(rs *);
+// extern void wb_beq(rs *);
+// extern void wb_add_addi(rs *);
+// extern void wb_div(rs *);
+// extern void wb_jal_jalr(rs *);
+// extern void wb_neg(rs *);
+// extern void wb_abs(rs *);
 
 #endif

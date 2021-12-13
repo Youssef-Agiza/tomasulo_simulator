@@ -31,14 +31,16 @@ extern int NC_EXEC_DIV;
 
 // number of write back cycles for each station
 // wb.cpp
-extern int NC_WB_LOAD;
-extern int NC_WB_STORE;
-extern int NC_WB_BEQ;
-extern int NC_WB_JAL;
-extern int NC_WB_ADD;
-extern int NC_WB_NEG;
-extern int NC_WB_ABS;
-extern int NC_WB_DIV;
+extern int NC_WB_REGFILE;
+extern int NC_WB_MEM;
+// extern int NC_WB_LOAD;
+// extern int NC_WB_STORE;
+// extern int NC_WB_BEQ;
+// extern int NC_WB_JAL;
+// extern int NC_WB_ADD;
+// extern int NC_WB_NEG;
+// extern int NC_WB_ABS;
+// extern int NC_WB_DIV;
 
 extern std::deque<rs *> load_store_buffer;
 extern int PC;

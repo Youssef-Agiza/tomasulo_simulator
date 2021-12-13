@@ -64,6 +64,7 @@ void rs::update_state()
             this->state_ = EXECUTING;
             cycles_counter_ = 0;
         }
+
         return;
     };
 
@@ -78,13 +79,16 @@ void rs::update_state()
         //     this->A_ = this->imm_ + this->Vj_;
         //     cycles_counter_ = 0;
         // }
-        return;
+        if(this->state_!=FINISHED)
+            return;
     }
 
     case WRITING:
     {
-
-        wb_(this);
+        if(wb_!=nullptr)
+            wb_(this);
+        else 
+            state_=FINISHED;
         // if (++cycles_counter_ >= nc_wb_ && cdb::available)
         // {
         //     this->inst_->wb_cycle = cycles_counter_ + this->inst_->exec_finish_cycle;
@@ -118,35 +122,35 @@ void initalize_station_name(std::vector<rs> &stations, const std::string &base_n
 void initalize_rstable()
 {
     rstable.load.resize(N_LOAD, rs( // NC_EXEC_LOAD, NC_WB_LOAD,
-                                    issue_load, can_exec_load, exec_load, wb_load));
+                                    issue_load, can_exec_load, exec_load, wb_regfile));
     initalize_station_name(rstable.load, "LOAD");
 
     rstable.store.resize(N_STORE, rs( // NC_EXEC_STORE, NC_WB_STORE,
-                                      issue_store, can_exec_store, exec_store, wb_store));
+                                      issue_store, can_exec_store, exec_store, wb_mem));
     initalize_station_name(rstable.store, "STORE");
 
     rstable.beq.resize(N_BEQ, rs( // NC_EXEC_BEQ, NC_WB_BEQ,
-                                  issue_beq, can_exec_beq, exec_beq, wb_beq));
+                                  issue_beq, can_exec_beq, exec_beq, nullptr));
     initalize_station_name(rstable.beq, "BEQ");
 
     rstable.jal_jalr.resize(N_JAL, rs( // NC_EXEC_JAL, NC_WB_JAL,
-                                       issue_jal_jalr, can_exec_jal_jalr, exec_jal_jalr, wb_jal_jalr));
+                                       issue_jal_jalr, can_exec_jal_jalr, exec_jal_jalr, wb_regfile));
     initalize_station_name(rstable.jal_jalr, "JAL/JALR");
 
     rstable.abs.resize(N_ABS, rs( // NC_EXEC_ABS, NC_WB_ABS,
-                                  issue_abs, can_exec_abs, exec_abs, wb_abs));
+                                  issue_abs, can_exec_abs, exec_abs, wb_regfile));
     initalize_station_name(rstable.abs, "ABS");
 
     rstable.neg.resize(N_NEG, rs( // NC_EXEC_NEG, NC_WB_NEG,
-                                  issue_neg, can_exec_neg, exec_neg, wb_neg));
+                                  issue_neg, can_exec_neg, exec_neg, wb_regfile));
     initalize_station_name(rstable.neg, "NEG");
 
     rstable.add_addi.resize(N_ADD, rs( // NC_EXEC_ADD, NC_WB_ADD,
-                                       issue_add_addi, can_exec_add_addi, exec_add_addi, wb_add_addi));
+                                       issue_add_addi, can_exec_add_addi, exec_add_addi, wb_regfile));
     initalize_station_name(rstable.add_addi, "ADD/ADDI");
 
     rstable.div.resize(N_DIV, rs( // NC_EXEC_DIV, NC_WB_DIV,
-                                  issue_div, can_exec_div, exec_div, wb_div));
+                                  issue_div, can_exec_div, exec_div, wb_regfile));
     initalize_station_name(rstable.div, "DIV");
 }
 void get_dynamic_hardware_params()
