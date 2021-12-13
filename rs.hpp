@@ -3,38 +3,7 @@
 #include "common.hpp"
 #include "params.h"
 #include "defs.hpp"
-#include "instruction.hpp"
-#include "cdb.hpp"
-
-// number of stations for each unit
-extern int N_LOAD;
-extern int N_STORE;
-extern int N_BEQ;
-extern int N_JAL;
-extern int N_ADD;
-extern int N_NEG;
-extern int N_ABS;
-extern int N_DIV;
-
-// number of execution cycles for each station
-extern int NC_EXEC_LOAD;
-extern int NC_EXEC_STORE;
-extern int NC_EXEC_BEQ;
-extern int NC_EXEC_JAL;
-extern int NC_EXEC_ADD;
-extern int NC_EXEC_NEG;
-extern int NC_EXEC_ABS;
-extern int NC_EXEC_DIV;
-
-// number of write back cycles for each station
-extern int NC_WB_LOAD;
-extern int NC_WB_STORE;
-extern int NC_WB_BEQ;
-extern int NC_WB_JAL;
-extern int NC_WB_ADD;
-extern int NC_WB_NEG;
-extern int NC_WB_ABS;
-extern int NC_WB_DIV;
+#include "globals.hpp"
 
 enum rsstate
 {
@@ -47,14 +16,11 @@ enum rsstate
 
 class rs //  reservation station
 {
+
 public:
     struct instruction *inst_;
     enum rsstate state_;
     int cycles_counter_;
-
-    // number of cycles needed for exec and wb
-    int nc_exec_;
-    int nc_wb_;
 
     std::string name_;
     ushort op_;
@@ -68,14 +34,21 @@ public:
     uint imm_;
     ushort A_; // address
 
-    rs(uint exec_cycles, uint wb_cycles, void (*issue)(rs *), bool (*exec)(rs *), void (*wb)(rs *));
-    void reset();
+    uint res; // result
 
+private:
     void (*issue_)(rs *);
     bool (*can_exec_)(rs *);
+    void (*exec_)(rs *);
     void (*wb_)(rs *);
 
-    void update();
+public:
+    rs( // uint exec_cycles, uint wb_cycles,
+        void (*issue)(rs *), bool (*can_exec)(rs *), void (*exec)(rs *), void (*wb)(rs *));
+    void reset();
+
+    void issue(instruction &inst);
+    void update_state();
 
     void print();
 };

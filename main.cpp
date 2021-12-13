@@ -23,6 +23,7 @@ int main()
     instruction::print_header();
     for (auto &inst : inst_mem)
         inst.print();
+    print_regfile();
 #endif
     // std::cout << regs[2] << "  " << regs[5] << "  " << regs[3] << "\n";
 

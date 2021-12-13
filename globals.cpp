@@ -14,6 +14,7 @@ ushort cdb::rd = -1;
 rs *cdb::st = nullptr;
 
 // globals.hpp
+std::deque<rs *> load_store_buffer;
 int PC = 0;
 int cycles = 0;
 bool stall = false;

@@ -1,23 +1,39 @@
 #include "defs.hpp"
-#include "regs.hpp"
-#include "rs.hpp"
+#include "globals.hpp"
 
-bool can_exec_load(rs *st)
+int NC_EXEC_LOAD = DEFAULT_NC_EXEC_LOAD;
+int NC_EXEC_STORE = DEFAULT_NC_EXEC_STORE;
+int NC_EXEC_BEQ = DEFAULT_NC_EXEC_BEQ;
+int NC_EXEC_JAL = DEFAULT_NC_EXEC_JAL;
+int NC_EXEC_ADD = DEFAULT_NC_EXEC_ADD;
+int NC_EXEC_NEG = DEFAULT_NC_EXEC_NEG;
+int NC_EXEC_ABS = DEFAULT_NC_EXEC_ABS;
+int NC_EXEC_DIV = DEFAULT_NC_EXEC_DIV;
+
+void exec_load(rs *st) {}
+void exec_store(rs *st) {}
+void exec_beq(rs *st) {}
+void exec_add_addi(rs *st)
 {
-    return true;
+    if (++st->cycles_counter_ >= NC_EXEC_ADD)
+    {
+        switch (st->op_)
+        {
+        case ADD_OP:
+            st->res = st->Vj_ + st->Vk_;
+            break;
+
+        case ADDI_OP:
+            st->res = st->Vj_ + st->imm_;
+            break;
+        }
+
+        st->inst_->exec_finish_cycle = st->cycles_counter_ + st->inst_->exec_start_cycle;
+        st->state_ = WRITING;
+        st->cycles_counter_ = 0;
+    }
 }
-bool can_exec_store(rs *st) { return true; }
-bool can_exec_beq(rs *st) { return true; }
-bool can_exec_add_addi(rs *st)
-{
-    if (st->op_ == ADD_OP)
-        return st->Qj_ == nullptr && st->Qk_ == nullptr;
-    else if (st->op_ == ADDI_OP)
-        return st->Qj_ == nullptr;
-    else
-        return false;
-}
-bool can_exec_div(rs *st) { return true; }
-bool can_exec_jal_jalr(rs *st) { return true; }
-bool can_exec_neg(rs *st) { return true; }
-bool can_exec_abs(rs *st) { return true; }
+void exec_div(rs *st) {}
+void exec_jal_jalr(rs *st) {}
+void exec_neg(rs *st) {}
+void exec_abs(rs *st) {}

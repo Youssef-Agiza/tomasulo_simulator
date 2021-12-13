@@ -1,9 +1,8 @@
 HEADERS= common.hpp mem.hpp regs.hpp rs.hpp types.hpp instruction.hpp defs.hpp cdb.hpp globals.hpp
-SRCS= main.cpp rs.cpp exec.cpp issue.cpp wb.cpp globals.cpp utils.cpp decode.cpp
+SRCS= main.cpp rs.cpp  issue.cpp can_exec.cpp exec.cpp wb.cpp globals.cpp utils.cpp decode.cpp
 GCC= g++
 FLAGS= -g 
 
-# ifeq($(OS))
 
 
 tomasulo: $(HEADERS) $(SRCS)

@@ -32,31 +32,88 @@ void toupper(std::string &str)
     for (auto &c : str)
         c = std::toupper(c);
 }
-
+void print_regfile()
+{
+    for (int i = 0; i < REGFILE_SIZE; i++)
+        std::cout << "x" << i << "=" << regs[i] << "\n";
+}
 void try_issue(instruction &inst)
 {
-    if (inst.name == "ADD" || inst.name == "ADDI")
-    {
+    if (inst.name == "LOAD")
         for (auto &st : rstable.add_addi)
             if (st.state_ == IDLE)
             {
-                inst.issue_cycle = cycles;
-                st.inst_ = &inst;
-                st.issue_(&st);
+                load_store_buffer.push_back(&st);
+                st.issue(inst);
                 PC++;
-                break;
+                return;
             }
-    }
 
-    // if (inst.name == "ADD" || inst.name == "ADDI")
-    //     for (auto &st : rstable.add_addi)
-    //         if (st.state_ == IDLE)
-    //         {
-    //             st.inst_ = &inst;
-    //             st.issue_(&st);
-    //             PC++;
-    //             break;
-    //         }
+    if (inst.name == "STORE")
+        for (auto &st : rstable.add_addi)
+            if (st.state_ == IDLE)
+            {
+                load_store_buffer.push_back(&st);
+                st.issue(inst);
+                PC++;
+                return;
+            }
+
+    if (inst.name == "BEQ")
+        for (auto &st : rstable.beq)
+            if (st.state_ == IDLE)
+            {
+                st.issue(inst);
+                PC++;
+                issued_branch = true;
+                return;
+            }
+
+    if (inst.name == "JAL" || inst.name == "JALR")
+        for (auto &st : rstable.jal_jalr)
+            if (st.state_ == IDLE)
+            {
+                inst.pc = PC;
+                st.issue(inst);
+                stall = true;
+                return;
+            }
+
+    if (inst.name == "NEG")
+        for (auto &st : rstable.neg)
+            if (st.state_ == IDLE)
+            {
+                st.issue(inst);
+                PC++;
+                return;
+            }
+
+    if (inst.name == "DIV")
+        for (auto &st : rstable.div)
+            if (st.state_ == IDLE)
+            {
+                st.issue(inst);
+                PC++;
+                return;
+            }
+
+    if (inst.name == "ABS")
+        for (auto &st : rstable.abs)
+            if (st.state_ == IDLE)
+            {
+                st.issue(inst);
+                PC++;
+                return;
+            }
+
+    if (inst.name == "ADD" || inst.name == "ADDI")
+        for (auto &st : rstable.add_addi)
+            if (st.state_ == IDLE)
+            {
+                st.issue(inst);
+                PC++;
+                return;
+            }
 }
 
 void broadcast()
@@ -127,14 +184,14 @@ static void update_writing_stations(rs &st)
 {
 
     if (st.state_ == WRITING)
-        st.update();
+        st.update_state();
 }
 
 static void update_non_writing_stations(rs &st)
 {
 
     if (st.state_ != WRITING)
-        st.update();
+        st.update_state();
 }
 
 static void broadcast_to_station(rs &st)
@@ -144,7 +201,7 @@ static void broadcast_to_station(rs &st)
         st.Qk_ = nullptr;
         st.Vk_ = cdb::rd;
     }
-    else if (cdb::st == st.Qj_)
+    if (cdb::st == st.Qj_)
     {
         st.Qj_ = nullptr;
         st.Vj_ = cdb::rd;

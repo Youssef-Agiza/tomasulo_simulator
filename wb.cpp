@@ -2,6 +2,15 @@
 #include "rs.hpp"
 #include "regs.hpp"
 
+int NC_WB_LOAD = DEFAULT_NC_WB_LOAD;
+int NC_WB_STORE = DEFAULT_NC_WB_STORE;
+int NC_WB_BEQ = DEFAULT_NC_WB_BEQ;
+int NC_WB_JAL = DEFAULT_NC_WB_JAL;
+int NC_WB_ADD = DEFAULT_NC_WB_ADD;
+int NC_WB_NEG = DEFAULT_NC_WB_NEG;
+int NC_WB_ABS = DEFAULT_NC_WB_ABS;
+int NC_WB_DIV = DEFAULT_NC_WB_DIV;
+
 void wb_load(rs *st) {}
 void wb_store(rs *st) {}
 void wb_beq(rs *st) {}
@@ -10,24 +19,25 @@ void wb_add_addi(rs *st)
 #ifdef DEBUGGING
     // st->print();
 #endif
-    for (int i = 0; i < REGFILE_SIZE; i++)
-        if (regstat[i].Qi == st)
-        {
-            switch (st->op_)
-            {
-            case ADD_OP:
-                cdb::rd = st->Vj_ + st->Vk_;
-                break;
 
-            case ADDI_OP:
-                cdb::rd = st->Vj_ + st->imm_;
-                break;
-            }
-            cdb::st = st;
-            return;
-        }
+    st->cycles_counter_++;
+
+    if (cdb::available == false)
+        return;
+    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
+    cdb::available = false;
+    cdb::rd = st->res;
+    cdb::st = st;
 }
 void wb_div(rs *st) {}
 void wb_jal_jalr(rs *st) {}
 void wb_neg(rs *st) {}
 void wb_abs(rs *st) {}
+
+// if (++cycles_counter_ >= nc_wb_ && cdb::available)
+// {
+//     this->inst_->wb_cycle = cycles_counter_ + this->inst_->exec_finish_cycle;
+//     cdb::available = false;
+//     wb_(this);
+//     reset();
+// }
