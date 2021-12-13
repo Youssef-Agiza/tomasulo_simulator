@@ -20,7 +20,8 @@ extern int N_DIV;
 
 // number of execution cycles for each station
 // exec.cpp
-extern int NC_EXEC_LOAD;
+extern int NC_EXEC_ADDRESS_LOAD;
+extern int NC_EXEC_MEM_LOAD;
 extern int NC_EXEC_STORE;
 extern int NC_EXEC_BEQ;
 extern int NC_EXEC_JAL;
@@ -31,6 +32,7 @@ extern int NC_EXEC_DIV;
 
 // number of write back cycles for each station
 // wb.cpp
+
 extern int NC_WB_REGFILE;
 extern int NC_WB_MEM;
 // extern int NC_WB_LOAD;

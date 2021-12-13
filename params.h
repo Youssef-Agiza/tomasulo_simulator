@@ -20,7 +20,8 @@
 #define DEFAULT_N_DIV 1
 
 // number of cycles for each station
-#define DEFAULT_NC_EXEC_LOAD 4
+#define DEFAULT_NC_EXEC_ADDRESS_LOAD 2;
+#define DEFAULT_NC_EXEC_MEM_LOAD 2;
 #define DEFAULT_NC_EXEC_STORE 2
 #define DEFAULT_NC_EXEC_BEQ 1
 #define DEFAULT_NC_EXEC_JAL 1

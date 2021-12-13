@@ -2,21 +2,32 @@
 #include "rs.hpp"
 #include "regs.hpp"
 
-int NC_WB_REGFILE=DEFAULT_NC_WB_REGFILE;
-int NC_WB_MEM=DEFAULT_NC_WB_MEM;
+int NC_WB_REGFILE = DEFAULT_NC_WB_REGFILE;
+int NC_WB_MEM = DEFAULT_NC_WB_MEM;
 
-
-
-
-
-void wb_mem(rs *){
-    
+void wb_mem(rs *st)
+{
+    if (++st->cycles_counter_ >= NC_WB_MEM)
+    {
+        data_memory[st->res] = st->Vk_;
+    }
+    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
+    st->state_ = FINISHED;
 }
-void wb_regfile(rs*){
 
+void wb_regfile(rs *st)
+{
+
+    st->cycles_counter_++;
+
+    if (cdb::available == false)
+        return;
+    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
+    cdb::available = false;
+    cdb::rd = st->res;
+    cdb::st = st;
+    st->state_ = FINISHED;
 }
-
-
 
 // int NC_WB_LOAD = DEFAULT_NC_WB_LOAD;
 // int NC_WB_STORE = DEFAULT_NC_WB_STORE;
@@ -27,11 +38,9 @@ void wb_regfile(rs*){
 // int NC_WB_ABS = DEFAULT_NC_WB_ABS;
 // int NC_WB_DIV = DEFAULT_NC_WB_DIV;
 
-
-
 // void wb_load(rs *st) {}
 // void wb_store(rs *st) {}
-// void wb_beq(rs *st) 
+// void wb_beq(rs *st)
 // {
 
 // }
@@ -51,7 +60,7 @@ void wb_regfile(rs*){
 //     cdb::st = st;
 //     st->state_ = FINISHED;
 // }
-// void wb_div(rs *st) 
+// void wb_div(rs *st)
 // {
 //     st->cycles_counter_++;
 
