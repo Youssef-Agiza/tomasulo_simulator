@@ -11,7 +11,6 @@ void fetch_instructions(const std::string &file_name)
 
     std::string line;
 
-    instruction::print_header();
     while (std::getline(inf, line))
     {
         instruction new_inst;

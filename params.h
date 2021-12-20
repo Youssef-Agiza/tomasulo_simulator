@@ -2,7 +2,7 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
-// #define DEBUGGING
+#define DEBUGGING
 
 #define NO_OP 0x0
 #define ADD_OP 0x1

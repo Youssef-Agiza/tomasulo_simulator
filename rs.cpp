@@ -98,6 +98,8 @@ void rs::update_state()
         //     wb_(this);
         //     reset();
         // }
+        if (this->state_ != FINISHED)
+            return;
     }
 
     case FINISHED:

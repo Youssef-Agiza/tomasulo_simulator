@@ -12,7 +12,6 @@ int main()
     while (!finished)
     {
         cycles++;
-        std::cout << "Cycle: " << cycles << "\n";
         update_stations();
         if (PC < inst_mem.size() && !stall)
             try_issue(inst_mem[PC]);
@@ -25,6 +24,7 @@ int main()
     for (auto &inst : inst_mem)
         inst.print();
     print_regfile();
+    print_data_mem();
 #endif
     // std::cout << regs[2] << "  " << regs[5] << "  " << regs[3] << "\n";
 

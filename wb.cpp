@@ -11,7 +11,7 @@ void wb_mem(rs *st)
     if (st->Qk_ != nullptr || st->cycles_counter_ < NC_WB_MEM)
         return;
 
-    data_mem[st->res % MEMORY_SIZE] = st->Vk_;
+    data_mem[st->imm_ % MEMORY_SIZE] = st->Vk_;
     st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
     st->state_ = FINISHED;
 }

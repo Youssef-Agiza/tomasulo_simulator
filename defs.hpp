@@ -23,6 +23,7 @@ extern void try_issue(instruction &inst);
 extern void update_stations();
 extern void broadcast();
 extern void update_finished();
+extern void print_data_mem();
 
 // issue.cpp
 extern void issue_load(rs *);
@@ -57,7 +58,7 @@ extern bool can_exec_abs(rs *);
 
 // wb.cpp
 extern void wb_mem(rs *);
-extern void wb_regfile(rs*);
+extern void wb_regfile(rs *);
 // extern void wb_load(rs *);
 // extern void wb_store(rs *);
 // extern void wb_beq(rs *);

@@ -19,26 +19,55 @@ static void save_finish_exec_cycle(rs *RS)
 }
 static bool is_address_conflict(rs *RS)
 {
-    if (!RS->comuted_A_) // shouldn't call this before computing A
+    if (!RS->comuted_A_) // prevent calling this function before computing A
         return true;
 
-    for (auto &st : load_store_buffer)
-        if (st == RS) // reached RS without conflicts
+    if (RS->inst_->op == STORE_OP)
+        for (auto &st : rstable.load)
+        {
+            if (&st == RS)
+                break;
+            if (st.state_ == IDLE || !st.comuted_A_)
+                continue;
+
+            if (st.imm_ == RS->imm_)
+                return true;
+        }
+
+    for (auto &st : rstable.store)
+    {
+        if (&st == RS)
             break;
-        else if (RS->inst_->op == LOAD_OP && st->inst_->op == LOAD_OP) // skip loads if RS is load
+
+        if (st.state_ == IDLE || !st.comuted_A_)
             continue;
-        else if (!st->comuted_A_ && st->state_ != IDLE) // found a station before the current that didn't finish computing A
+
+        if (st.imm_ == RS->imm_)
             return true;
-        else if (st->imm_ == RS->imm_ && st->state_ != IDLE) // found a conflict
-            return true;
+    }
     return false;
+    // for (auto &st : load_store_buffer)
+    //     if (st == RS) // reached RS without conflicts
+    //         break;
+    //     else if (RS->inst_->op == LOAD_OP && st->inst_->op == LOAD_OP) // skip loads if RS is load
+    //         continue;
+    //     else if (!st->comuted_A_ && st->state_ != IDLE) // found a station before the current that didn't finish computing A
+    //         return true;
+    //     else if (st->imm_ == RS->imm_ && st->state_ != IDLE) // found a conflict
+    //         return true;
 }
 
 void exec_load(rs *RS)
 {
-    RS->cycles_counter_++;
-    if (RS->cycles_counter_ >= NC_EXEC_ADDRESS_LOAD && !RS->comuted_A_)
+
+    if (++RS->cycles_counter_ < NC_EXEC_ADDRESS_LOAD)
+        return;
+    if (!RS->comuted_A_)
     {
+        if (RS != load_store_buffer.front())
+            emit_error("Executing load(step1) that is not the head of the buffer");
+        load_store_buffer.pop_front();
+
         RS->comuted_A_ = true;
         RS->imm_ = RS->Vj_ + RS->imm_;
         return;
@@ -55,12 +84,15 @@ void exec_load(rs *RS)
 }
 void exec_store(rs *RS)
 {
-    RS->cycles_counter_++;
-    if (RS->cycles_counter_ < NC_EXEC_STORE)
+    if (++RS->cycles_counter_ < NC_EXEC_STORE)
         return;
 
     if (!RS->comuted_A_)
     {
+        if (RS != load_store_buffer.front())
+            emit_error("Executing store that is not the head of the buffer");
+        load_store_buffer.pop_front();
+
         RS->comuted_A_ = true;
         RS->imm_ = RS->Vj_ + RS->imm_;
     }
@@ -68,7 +100,7 @@ void exec_store(rs *RS)
     if (is_address_conflict(RS))
         return;
 
-    RS->res = RS->Vj_ + RS->imm_;
+    RS->res = RS->Vj_; //+ RS->imm_;
     save_finish_exec_cycle(RS);
 }
 void exec_beq(rs *RS) { RS->state_ = FINISHED; }
