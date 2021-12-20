@@ -33,6 +33,7 @@ public:
 
     uint imm_;
     ushort A_; // address
+    bool comuted_A_;
 
     uint res; // result
 

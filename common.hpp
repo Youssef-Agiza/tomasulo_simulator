@@ -12,6 +12,7 @@
 #include <vector>
 #include <stdexcept>
 #include <deque>
+#include <unordered_map>
 
 #include "types.hpp"
 

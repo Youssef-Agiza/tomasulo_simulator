@@ -16,7 +16,7 @@ void issue_load(rs *st)
         st->Vj_ = regs[inst->rs1];
         st->Qj_ = nullptr;
     }
-    st->A_ = inst->imm;
+    st->imm_ = inst->imm;
     regstat[inst->rd].Qi = st;
 }
 
@@ -39,7 +39,7 @@ void issue_store(rs *st)
         st->Vk_ = regs[inst->rs2];
         st->Qk_ = nullptr;
     }
-    st->A_ = inst->imm;
+    st->imm_ = inst->imm;
 }
 
 void issue_beq(rs *st)

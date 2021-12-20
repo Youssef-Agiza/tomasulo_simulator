@@ -6,6 +6,7 @@
 struct instruction
 {
     std::string name;
+    ushort op;
     ushort rd;
     ushort rs1;
     ushort rs2;
@@ -19,6 +20,7 @@ struct instruction
     instruction()
     {
         name = "";
+        op = 0;
         rd = -1;
         rs1 = -1;
         rs2 = -1;

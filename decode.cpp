@@ -46,7 +46,11 @@ void decode_line(const std::string &line, instruction &inst)
     ss >> name;
 
     toupper(name);
+    if (inst_op_map.find(name) == inst_op_map.end())
+        emit_error("Unknown instruction: " + name + "\n");
+
     inst.name = name;
+    inst.op = inst_op_map[name];
     if (name == "ADD" || name == "DIV")
     {
         ss >> rd >> rs1 >> rs2;

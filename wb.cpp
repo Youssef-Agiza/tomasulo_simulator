@@ -7,10 +7,11 @@ int NC_WB_MEM = DEFAULT_NC_WB_MEM;
 
 void wb_mem(rs *st)
 {
-    if (++st->cycles_counter_ >= NC_WB_MEM)
-    {
-        data_memory[st->res] = st->Vk_;
-    }
+    ++st->cycles_counter_;
+    if (st->Qk_ != nullptr || st->cycles_counter_ < NC_WB_MEM)
+        return;
+
+    data_mem[st->res % MEMORY_SIZE] = st->Vk_;
     st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
     st->state_ = FINISHED;
 }
@@ -22,9 +23,9 @@ void wb_regfile(rs *st)
 
     if (cdb::available == false)
         return;
-    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
     cdb::available = false;
     cdb::rd = st->res;
+    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
     cdb::st = st;
     st->state_ = FINISHED;
 }

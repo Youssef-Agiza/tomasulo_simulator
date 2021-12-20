@@ -12,6 +12,7 @@ int main()
     while (!finished)
     {
         cycles++;
+        std::cout << "Cycle: " << cycles << "\n";
         update_stations();
         if (PC < inst_mem.size() && !stall)
             try_issue(inst_mem[PC]);

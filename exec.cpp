@@ -11,59 +11,106 @@ int NC_EXEC_NEG = DEFAULT_NC_EXEC_NEG;
 int NC_EXEC_ABS = DEFAULT_NC_EXEC_ABS;
 int NC_EXEC_DIV = DEFAULT_NC_EXEC_DIV;
 
-static void save_wb_cycle(rs *st)
+static void save_finish_exec_cycle(rs *RS)
 {
-    st->inst_->exec_finish_cycle = st->cycles_counter_ + st->inst_->exec_start_cycle;
-    st->state_ = WRITING;
-    st->cycles_counter_ = 0;
+    RS->inst_->exec_finish_cycle = RS->cycles_counter_ + RS->inst_->exec_start_cycle;
+    RS->state_ = WRITING;
+    RS->cycles_counter_ = 0;
+}
+static bool is_address_conflict(rs *RS)
+{
+    if (!RS->comuted_A_) // shouldn't call this before computing A
+        return true;
+
+    for (auto &st : load_store_buffer)
+        if (st == RS) // reached RS without conflicts
+            break;
+        else if (RS->inst_->op == LOAD_OP && st->inst_->op == LOAD_OP) // skip loads if RS is load
+            continue;
+        else if (!st->comuted_A_ && st->state_ != IDLE) // found a station before the current that didn't finish computing A
+            return true;
+        else if (st->imm_ == RS->imm_ && st->state_ != IDLE) // found a conflict
+            return true;
+    return false;
 }
 
-void exec_load(rs *st) {}
-void exec_store(rs *st)
+void exec_load(rs *RS)
 {
-    st->res = st->Vj_ + st->imm_;
-        save_wb_cycle(st);
-
-}
-void exec_beq(rs *st) {}
-void exec_add_addi(rs *st)
-{
-    if (++st->cycles_counter_ >= NC_EXEC_ADD)
+    RS->cycles_counter_++;
+    if (RS->cycles_counter_ >= NC_EXEC_ADDRESS_LOAD && !RS->comuted_A_)
     {
-        switch (st->op_)
+        RS->comuted_A_ = true;
+        RS->imm_ = RS->Vj_ + RS->imm_;
+        return;
+    }
+
+    if (is_address_conflict(RS))
+        return;
+
+    if (RS->cycles_counter_ >= NC_EXEC_MEM_LOAD + NC_EXEC_ADDRESS_LOAD)
+    {
+        RS->res = data_mem[RS->imm_ % MEMORY_SIZE];
+        save_finish_exec_cycle(RS);
+    }
+}
+void exec_store(rs *RS)
+{
+    RS->cycles_counter_++;
+    if (RS->cycles_counter_ < NC_EXEC_STORE)
+        return;
+
+    if (!RS->comuted_A_)
+    {
+        RS->comuted_A_ = true;
+        RS->imm_ = RS->Vj_ + RS->imm_;
+    }
+
+    if (is_address_conflict(RS))
+        return;
+
+    RS->res = RS->Vj_ + RS->imm_;
+    save_finish_exec_cycle(RS);
+}
+void exec_beq(rs *RS) { RS->state_ = FINISHED; }
+void exec_add_addi(rs *RS)
+{
+    if (++RS->cycles_counter_ >= NC_EXEC_ADD)
+    {
+        switch (RS->op_)
         {
         case ADD_OP:
-            st->res = st->Vj_ + st->Vk_;
+            RS->res = RS->Vj_ + RS->Vk_;
             break;
 
         case ADDI_OP:
-            st->res = st->Vj_ + st->imm_;
+            RS->res = RS->Vj_ + RS->imm_;
             break;
         }
-        save_wb_cycle(st);
+        save_finish_exec_cycle(RS);
     }
 }
-void exec_div(rs *st)
+void exec_div(rs *RS)
 {
-    if (++st->cycles_counter_ >= NC_EXEC_DIV)
-        st->res = st->Vj_ / st->Vk_;
+    if (++RS->cycles_counter_ >= NC_EXEC_DIV)
+        RS->res = RS->Vj_ / RS->Vk_;
 
-    save_wb_cycle(st);
+    save_finish_exec_cycle(RS);
 }
-void exec_jal_jalr(rs *st)
+void exec_jal_jalr(rs *RS)
 {
+    RS->state_ = FINISHED;
 }
-void exec_neg(rs *st)
+void exec_neg(rs *RS)
 {
-    if (++st->cycles_counter_ >= NC_EXEC_DIV)
-        st->res = (!st->Vj_) + 1;
+    if (++RS->cycles_counter_ >= NC_EXEC_DIV)
+        RS->res = (!RS->Vj_) + 1;
 
-    save_wb_cycle(st);
+    save_finish_exec_cycle(RS);
 }
-void exec_abs(rs *st)
+void exec_abs(rs *RS)
 {
-    if (++st->cycles_counter_ >= NC_EXEC_DIV)
-        st->res = (st->res < 0) ? -st->Vj_ : st->Vj_;
+    if (++RS->cycles_counter_ >= NC_EXEC_DIV)
+        RS->res = (RS->res < 0) ? -RS->Vj_ : RS->Vj_;
 
-    save_wb_cycle(st);
+    save_finish_exec_cycle(RS);
 }

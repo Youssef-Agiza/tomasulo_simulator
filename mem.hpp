@@ -7,6 +7,6 @@
 #define MEMORY_SIZE (2 << ADDRESS_SIZE)
 
 extern std::vector<instruction> inst_mem;
-extern uint data_memory[MEMORY_SIZE];
-
+// extern uint data_mem[MEMORY_SIZE];
+extern std::vector<uint> data_mem;
 #endif

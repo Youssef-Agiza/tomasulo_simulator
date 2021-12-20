@@ -40,7 +40,7 @@ void print_regfile()
 void try_issue(instruction &inst)
 {
     if (inst.name == "LOAD")
-        for (auto &st : rstable.add_addi)
+        for (auto &st : rstable.load)
             if (st.state_ == IDLE)
             {
                 load_store_buffer.push_back(&st);
@@ -50,7 +50,7 @@ void try_issue(instruction &inst)
             }
 
     if (inst.name == "STORE")
-        for (auto &st : rstable.add_addi)
+        for (auto &st : rstable.store)
             if (st.state_ == IDLE)
             {
                 load_store_buffer.push_back(&st);

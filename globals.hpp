@@ -44,6 +44,9 @@ extern int NC_WB_MEM;
 // extern int NC_WB_ABS;
 // extern int NC_WB_DIV;
 
+// map from instruction name to op code
+extern std::unordered_map<std::string, ushort> inst_op_map;
+
 extern std::deque<rs *> load_store_buffer;
 extern int PC;
 extern int cycles;

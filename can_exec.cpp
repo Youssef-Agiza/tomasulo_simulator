@@ -2,21 +2,32 @@
 #include "globals.hpp"
 bool can_exec_load(rs *st)
 {
-    if (st == load_store_buffer.front())
-        return st->Qj_ == nullptr;
+    return st->Qj_ == nullptr;
 
-    for (const auto &st : load_store_buffer)
-        if (st->inst_->name == "STORE")
-        {
-            st->cycles_counter_ >= 0;
-        }
-    return false;
+    // if (load_store_buffer.empty()) // gaurd
+    //     return false;
+
+    // auto itr = load_store_buffer.begin();
+    // while (itr != load_store_buffer.end())
+    //     if (*itr++ == st)
+    //         return st->Qj_ == nullptr;
+
+    // return false;
+    // if (st == load_store_buffer.front())
+    //     if (st->Qj_ == nullptr)
+    //     {
+    //         load_store_buffer.pop_front();
+    //         return true;
+    //     }
+    // for (auto &st0 : load_store_buffer)
+    //     if (st0 == st)
+    //         return true;
+    //     else if (st0->comuted_A_ && st0->imm_)
+    //         return false;
 }
 bool can_exec_store(rs *st)
 {
-    if (st == load_store_buffer.front())
-        return st->Qj_ == nullptr;
-    return false;
+    return st->Qj_ == nullptr;
 }
 bool can_exec_beq(rs *st) { return true; }
 bool can_exec_add_addi(rs *st)
