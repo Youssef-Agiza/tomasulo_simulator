@@ -52,6 +52,6 @@ extern int PC;
 extern int cycles;
 extern bool stall;
 extern bool finished;
-extern bool issued_branch;
+extern bool branch_issued;
 
 #endif

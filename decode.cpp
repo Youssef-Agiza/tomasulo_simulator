@@ -50,6 +50,8 @@ void decode_line(const std::string &line, instruction &inst)
 
     inst.name = name;
     inst.op = inst_op_map[name];
+    inst.pc = PC;
+
     if (name == "ADD" || name == "DIV")
     {
         ss >> rd >> rs1 >> rs2;

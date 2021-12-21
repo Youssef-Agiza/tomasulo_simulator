@@ -2,6 +2,7 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 #include "common.hpp"
+#include "params.h"
 
 struct instruction
 {
@@ -20,7 +21,7 @@ struct instruction
     instruction()
     {
         name = "";
-        op = 0;
+        op = NO_OP;
         rd = -1;
         rs1 = -1;
         rs2 = -1;
@@ -43,7 +44,7 @@ struct instruction
     {
         using std::setw;
         static const int w = 10;
-        std::cout << setw(w) << name << setw(w) << rd << setw(w) << rs1 << setw(w) << rs2 << setw(w) << imm
+        std::cout << setw(w) << name << setw(w) << (signed short)rd << setw(w) << (signed short)rs1 << setw(w) << (signed short)rs2 << setw(w) << imm
                   << setw(w) << issue_cycle << setw(w) << exec_start_cycle << setw(w) << exec_finish_cycle << setw(w) << wb_cycle << "\n";
     }
 };

@@ -3,6 +3,7 @@
 // regs.hpp
 ushort regs[REGFILE_SIZE];
 struct RegStat regstat[REGFILE_SIZE];
+struct RegStat regstat_copy[REGFILE_SIZE];
 
 // mem.hpp
 std::vector<uint> data_mem(MEMORY_SIZE, 0);
@@ -20,10 +21,16 @@ int PC = 0;
 int cycles = 0;
 bool stall = false;
 bool finished = false;
-bool issued_branch = false;
+bool branch_issued = false;
 std::unordered_map<std::string, ushort> inst_op_map({
     {"LOAD", LOAD_OP},
     {"STORE", STORE_OP},
     {"ADDI", ADDI_OP},
     {"ADD", ADD_OP},
+    {"DIV", DIV_OP},
+    {"BEQ", BEQ_OP},
+    {"ABS", ABS_OP},
+    {"NEG", NEG_OP},
+    {"JAL", JAL_OP},
+    {"JALR", JALR_OP},
 });

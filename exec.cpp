@@ -103,7 +103,7 @@ void exec_store(rs *RS)
     RS->res = RS->Vj_; //+ RS->imm_;
     save_finish_exec_cycle(RS);
 }
-void exec_beq(rs *RS) { RS->state_ = FINISHED; }
+
 void exec_add_addi(rs *RS)
 {
     if (++RS->cycles_counter_ >= NC_EXEC_ADD)
@@ -124,25 +124,66 @@ void exec_add_addi(rs *RS)
 void exec_div(rs *RS)
 {
     if (++RS->cycles_counter_ >= NC_EXEC_DIV)
-        RS->res = RS->Vj_ / RS->Vk_;
+    {
+        RS->res = (RS->Vk_ != 0) ? (RS->Vj_ / RS->Vk_) : (-1);
 
-    save_finish_exec_cycle(RS);
+        save_finish_exec_cycle(RS);
+    }
+}
+void exec_beq(rs *RS)
+{
+
+    if (++RS->cycles_counter_ >= NC_EXEC_BEQ)
+    {
+        if (RS->Vj_ == RS->Vk_)
+        {
+            PC = RS->inst_->pc + RS->imm_ + 1;
+            flush_stations(RS->inst_->pc);
+        }
+
+        branch_issued = false;
+        save_finish_exec_cycle(RS);
+        RS->state_ = FINISHED;
+    }
 }
 void exec_jal_jalr(rs *RS)
 {
-    RS->state_ = FINISHED;
+    if (++RS->cycles_counter_ >= NC_EXEC_JAL)
+    {
+        switch (RS->inst_->op)
+        {
+        case JAL_OP:
+        {
+            RS->res = RS->inst_->pc + 1;
+            PC = RS->imm_ + 1 + PC;
+            break;
+        }
+        case JALR_OP:
+        {
+            RS->res = RS->inst_->pc + 1;
+            PC = RS->Vj_;
+            break;
+        }
+        default:
+            break;
+        }
+        stall = false;
+        save_finish_exec_cycle(RS);
+    }
 }
 void exec_neg(rs *RS)
 {
-    if (++RS->cycles_counter_ >= NC_EXEC_DIV)
-        RS->res = (!RS->Vj_) + 1;
-
-    save_finish_exec_cycle(RS);
+    if (++RS->cycles_counter_ >= NC_EXEC_NEG)
+    {
+        RS->res = (~RS->Vj_) + 1;
+        save_finish_exec_cycle(RS);
+    }
 }
 void exec_abs(rs *RS)
 {
-    if (++RS->cycles_counter_ >= NC_EXEC_DIV)
-        RS->res = (RS->res < 0) ? -RS->Vj_ : RS->Vj_;
-
-    save_finish_exec_cycle(RS);
+    if (++RS->cycles_counter_ >= NC_EXEC_ABS)
+    {
+        RS->res = (((signed short)RS->Vj_) < 0) ? -RS->Vj_ : RS->Vj_;
+        save_finish_exec_cycle(RS);
+    }
 }

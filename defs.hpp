@@ -19,13 +19,21 @@ extern void decode_line(const std::string &line, instruction &inst);
 extern void emit_error(const std::string &err);
 extern void toupper(std::string &str);
 extern void print_regfile();
-extern void try_issue(instruction &inst);
-extern void update_stations();
-extern void broadcast();
-extern void update_finished();
 extern void print_data_mem();
 
+// input: function pointer
+// output: iterates on all units and executes the func.
+extern void iterate_on_stations(void (*func)(rs &st, void *p), void *params = nullptr);
+
+// update.cpp
+extern void update_stations();
+extern void update_finished();
+extern void broadcast();
+extern void flush_stations(uint start_pc);
+extern void save_regstate();
+
 // issue.cpp
+extern void try_issue(instruction &inst);
 extern void issue_load(rs *);
 extern void issue_store(rs *);
 extern void issue_beq(rs *);
@@ -59,13 +67,5 @@ extern bool can_exec_abs(rs *);
 // wb.cpp
 extern void wb_mem(rs *);
 extern void wb_regfile(rs *);
-// extern void wb_load(rs *);
-// extern void wb_store(rs *);
-// extern void wb_beq(rs *);
-// extern void wb_add_addi(rs *);
-// extern void wb_div(rs *);
-// extern void wb_jal_jalr(rs *);
-// extern void wb_neg(rs *);
-// extern void wb_abs(rs *);
 
 #endif

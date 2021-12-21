@@ -1,0 +1,8 @@
+ADDI x1 x0 9 
+ADDI x2 x0 3
+STORE x1 0 x0
+LOAD x4 0 x2
+DIV x3 x1 x2
+NEG x5 x3
+ABS x7 x5
+ADD x0 x4 x3

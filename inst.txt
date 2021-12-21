@@ -1,3 +1,0 @@
-ADDI x2 x0 9 
-STORE x2 0 x2
-LOAD x5 0 x2

@@ -13,5 +13,6 @@ struct RegStat
     rs *Qi;
 };
 extern struct RegStat regstat[REGFILE_SIZE];
+extern struct RegStat regstat_copy[REGFILE_SIZE]; // used to reterun regstat on flushing
 
 #endif

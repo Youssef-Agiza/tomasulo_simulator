@@ -6,29 +6,28 @@
  * Helper functions
  *
  */
-// input: function pointer
-// output: iterates on all units and executes the func.
-static void iterate_on_stations(void (*func)(rs &st));
 
 static void update_executing_load_store();
 static void update_busy_load_store();
-// the following three functions use iterate_on_stations
-static void update_writing_stations(rs &st);
-static void update_non_writing_stations(rs &st);
+static void broadcast_to_regstat();
+static void undo_regstate();
+
+// the following  functions use iterate_on_stations
+static void update_writing_stations(rs &st, void *p);
+static void update_non_writing_stations(rs &st, void *p);
+static void flush_helper(rs &st, void *p);
 
 // input reference to a station
 // output: checks if st is waiting for the result in the cdb and updates it.
-static void broadcast_to_station(rs &st);
-static void update_finished_helper(rs &st);
-
-static void broadcast_to_regstat();
+static void broadcast_to_station(rs &st, void *p);
+static void update_finished_helper(rs &st, void *p);
 
 void update_stations()
 {
     iterate_on_stations(update_writing_stations);
-    update_executing_load_store();
-    broadcast();
     update_busy_load_store();
+    broadcast();
+    update_executing_load_store();
     iterate_on_stations(update_non_writing_stations);
 }
 
@@ -54,49 +53,41 @@ void broadcast()
 
     cdb::available = true;
 }
-
+void flush_stations(uint pc_start)
+{
+    iterate_on_stations(flush_helper, (void *)&pc_start);
+    undo_regstate();
+}
+void save_regstate()
+{
+    for (int i = 0; i < REGFILE_SIZE; i++)
+        regstat_copy[i].Qi = regstat[i].Qi;
+}
 /******
  *
  * The following are static helper functions for better readability
  *
  * **********/
 
-static void iterate_on_stations(void (*func)(rs &st))
+static void flush_helper(rs &st, void *p_address)
 {
-
-    for (auto &st : rstable.load)
-        func(st);
-
-    for (auto &st : rstable.store)
-        func(st);
-
-    for (auto &st : rstable.add_addi)
-        func(st);
-
-    for (auto &st : rstable.abs)
-        func(st);
-
-    for (auto &st : rstable.beq)
-        func(st);
-
-    for (auto &st : rstable.div)
-        func(st);
-
-    for (auto &st : rstable.jal_jalr)
-        func(st);
-
-    for (auto &st : rstable.neg)
-        func(st);
+    uint *pc_address = (uint *)p_address;
+    if (st.inst_->pc > *pc_address)
+        st.reset();
 }
-
-static void update_writing_stations(rs &st)
+static void undo_regstate()
+{
+    for (int i = 0; i < REGFILE_SIZE; i++)
+        regstat[i].Qi = regstat_copy[i].Qi;
+}
+static void update_writing_stations(rs &st, void *p)
 {
 
     if (st.state_ == WRITING) // && !(st.inst_->op == LOAD_OP || st.inst_->op == STORE_OP))
         st.update_state();
 }
 
-static void update_non_writing_stations(rs &st)
+static void update_non_writing_stations(rs &st, void *p)
 {
 
     if (st.state_ == IDLE)
@@ -126,7 +117,7 @@ static void update_busy_load_store()
         if (st.state_ == BUSY)
             st.update_state();
 }
-static void update_finished_helper(rs &st)
+static void update_finished_helper(rs &st, void *p)
 {
     if (st.state_ != IDLE)
         finished = false;
@@ -139,10 +130,11 @@ static void broadcast_to_regstat()
         if (regstat[r].Qi == cdb::st)
         {
             regs[r] = cdb::rd;
+            regstat[r].Qi = nullptr;
             return;
         }
 }
-static void broadcast_to_station(rs &st)
+static void broadcast_to_station(rs &st, void *p)
 {
     if (cdb::st == st.Qk_)
     {
