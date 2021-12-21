@@ -1,7 +1,0 @@
-LOAD x1 12 x2
-JAL x3 13
-JALR x4 x5
-NEG x6 x7
-ABS x8 x9
-STORE x10 14 x11
-BEQ x12 x13 15

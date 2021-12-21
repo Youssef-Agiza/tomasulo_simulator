@@ -86,7 +86,7 @@ void issue_jal_jalr(rs *st)
             st->Qk_ = regstat[inst->rs1].Qi;
         else
         {
-            st->Vk_ = regs[inst->rs1];
+            st->Vj_ = regs[inst->rs1];
             st->Qk_ = nullptr;
         }
         st->op_ = JALR_OP;

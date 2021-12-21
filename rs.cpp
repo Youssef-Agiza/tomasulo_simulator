@@ -158,6 +158,23 @@ void initalize_rstable()
     initalize_station_name(rstable.div, "DIV");
 }
 void get_dynamic_hardware_params()
+
 {
+    char answer = 'x';
+    std::cout << "Do you want to customize the hardware?(y/n)";
+    std::cin >> answer;
+    answer = toupper(answer);
+    while (answer != 'Y' && answer != 'N')
+    {
+        "Enter a valid answer!\n";
+        std::cout << "Do you want to customize the hardware?(y/n)";
+        std::cin >> answer;
+        answer = toupper(answer);
+    }
+    if (answer == 'Y')
+    {
+        std::cout << "Enter NC for div: ";
+        std::cin >> NC_EXEC_DIV;
+    }
     // left empty for now
 }

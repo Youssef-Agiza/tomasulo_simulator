@@ -9,6 +9,7 @@ struct instruction;
 // rs.cpp
 extern void initalize_station_name(std::vector<rs> &stations, const std::string &base_name);
 extern void initalize_rstable();
+extern void get_dynamic_hardware_params();
 
 // decode.cpp
 extern void fetch_instructions(const std::string &file_name);

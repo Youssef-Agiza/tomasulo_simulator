@@ -11,7 +11,7 @@ struct instruction
     ushort rd;
     ushort rs1;
     ushort rs2;
-    uint imm;
+    int imm;
     uint pc;
     int issue_cycle;
     int exec_start_cycle;
@@ -19,6 +19,10 @@ struct instruction
     int wb_cycle;
 
     instruction()
+    {
+        reset();
+    }
+    void reset()
     {
         name = "";
         op = NO_OP;
@@ -35,7 +39,7 @@ struct instruction
     static void print_header()
     {
         using std::setw;
-        static const int w = 10;
+        static const int w = 15;
         std::cout << setw(w) << "name" << setw(w) << "rd" << setw(w) << "rs1" << setw(w) << "rs2" << setw(w) << "imm"
                   << setw(w) << "issue" << setw(w) << "exec1" << setw(w) << "exec2" << setw(w) << "wb"
                   << "\n";
@@ -43,7 +47,7 @@ struct instruction
     void print()
     {
         using std::setw;
-        static const int w = 10;
+        static const int w = 15;
         std::cout << setw(w) << name << setw(w) << (signed short)rd << setw(w) << (signed short)rs1 << setw(w) << (signed short)rs2 << setw(w) << imm
                   << setw(w) << issue_cycle << setw(w) << exec_start_cycle << setw(w) << exec_finish_cycle << setw(w) << wb_cycle << "\n";
     }

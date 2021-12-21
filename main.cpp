@@ -10,6 +10,7 @@ int main(int argc, char **argv)
     std::string file_name = argv[1];
     // file_name = "inst.txt";
     fetch_instructions(file_name);
+    get_dynamic_hardware_params();
     initalize_rstable();
     while (!finished)
     {
@@ -33,7 +34,6 @@ int main(int argc, char **argv)
     print_regfile();
     print_data_mem();
 #endif
-    // std::cout << regs[2] << "  " << regs[5] << "  " << regs[3] << "\n";
 
     return 0;
 }

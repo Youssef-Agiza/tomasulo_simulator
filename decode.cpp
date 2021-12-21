@@ -36,7 +36,6 @@ ushort decode_reg(const std::string &reg_str)
 void decode_line(const std::string &line, instruction &inst)
 {
     std::stringstream ss(line);
-    // std::cout << "inst" << cycles++ << ": ";
     inst.rs1 = -1;
     inst.rs2 = -1;
     inst.rd = -1;
