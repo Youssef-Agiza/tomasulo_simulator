@@ -3,11 +3,36 @@
 #include "instruction.hpp"
 #include "globals.hpp"
 
-void fetch_instructions(const std::string &file_name)
+void read_data_mem(const std::string &file_name)
 {
     std::ifstream inf(file_name);
     if (inf.fail())
-        emit_error("Couldn't open file");
+        emit_error("Couldn't data memory file");
+
+    std::string line, addr, val;
+
+    std::cout << std::setw(20) << std::setfill('-') << std::setw(20) << "READING MEMORY DATA" << std::setw(20) << "\n";
+
+    while (std::getline(inf, line))
+    {
+        std::stringstream ss(line);
+        ss >> addr >> val;
+        if (!isNumber(addr) || !isNumber(val))
+            emit_error("Error: data memory can only contain numbers");
+
+        data_mem[std::stoi(addr) % MEMORY_SIZE] = std::stoi(val);
+#ifdef DEBUGGING
+        std::cout << "Reading " << val << " to address " << addr << "...\n";
+#endif
+    }
+
+    inf.close();
+}
+void read_instructions(const std::string &file_name)
+{
+    std::ifstream inf(file_name);
+    if (inf.fail())
+        emit_error("Couldn't instructions file");
 
     std::string line;
     int pc = 0;

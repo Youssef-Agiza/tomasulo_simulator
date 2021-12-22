@@ -31,7 +31,7 @@ void update_stations()
     iterate_on_stations(update_non_writing_stations);
 }
 
-void update_finished()
+void update_program_finished()
 {
     finished = true;
     if (PC < inst_mem.size())

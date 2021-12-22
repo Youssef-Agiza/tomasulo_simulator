@@ -5,13 +5,13 @@
 int main(int argc, char **argv)
 {
     if (argc < 2)
-        emit_error("usage: <program name> <instructions file>.txt");
+        emit_error("Usage: <program name> instructions_file.txt data_mem_file.txt");
 
-    std::string file_name = argv[1];
-    // file_name = "inst.txt";
-    fetch_instructions(file_name);
-    get_dynamic_hardware_params();
+    read_instructions(argv[1]);
+    if (argc > 2)
+        read_data_mem(argv[2]);
     initalize_rstable();
+
     while (!finished)
     {
         cycles++;
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 #endif
             try_issue(inst_mem[PC]);
         }
-        update_finished();
+        update_program_finished();
     }
 
 #ifdef DEBUGGING

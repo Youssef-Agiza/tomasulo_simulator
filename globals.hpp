@@ -53,5 +53,8 @@ extern int cycles;
 extern bool stall;
 extern bool finished;
 extern bool branch_issued;
+extern int misprediction_count;
+extern int instructions_count;
+extern int IPC;
 
 #endif

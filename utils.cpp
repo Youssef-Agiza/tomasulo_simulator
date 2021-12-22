@@ -4,13 +4,20 @@
 
 void emit_error(const std::string &err)
 {
-    std::cerr << "\nError: " << err << "\n";
+    std::cerr << err << "\n";
     exit(-1);
 }
 void toupper(std::string &str)
 {
     for (auto &c : str)
         c = std::toupper(c);
+}
+bool isNumber(const std::string &str)
+{
+    for (auto c : str)
+        if (!std::isdigit(c))
+            return false;
+    return true;
 }
 void print_regfile()
 {
@@ -27,7 +34,7 @@ void print_data_mem()
         std::cout << i << " -- " << (signed int)data_mem[i] << "\n";
 }
 
-extern void iterate_on_stations(void (*func)(rs &st, void *p), void *params)
+void iterate_on_stations(void (*func)(rs &st, void *p), void *params)
 {
 
     for (auto &st : rstable.load)

@@ -11,7 +11,7 @@ int NC_EXEC_NEG = DEFAULT_NC_EXEC_NEG;
 int NC_EXEC_ABS = DEFAULT_NC_EXEC_ABS;
 int NC_EXEC_DIV = DEFAULT_NC_EXEC_DIV;
 
-static void save_finish_exec_cycle(rs *RS)
+static void record_finish_exec_cycle(rs *RS)
 {
     RS->inst_->exec_finish_cycle = RS->cycles_counter_ + RS->inst_->exec_start_cycle;
     RS->state_ = WRITING;
@@ -79,7 +79,7 @@ void exec_load(rs *RS)
     if (RS->cycles_counter_ >= NC_EXEC_MEM_LOAD + NC_EXEC_ADDRESS_LOAD)
     {
         RS->res = data_mem[RS->imm_ % MEMORY_SIZE];
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_store(rs *RS)
@@ -101,7 +101,7 @@ void exec_store(rs *RS)
         return;
 
     RS->res = RS->Vj_; //+ RS->imm_;
-    save_finish_exec_cycle(RS);
+    record_finish_exec_cycle(RS);
 }
 
 void exec_add_addi(rs *RS)
@@ -118,7 +118,7 @@ void exec_add_addi(rs *RS)
             RS->res = RS->Vj_ + RS->imm_;
             break;
         }
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_div(rs *RS)
@@ -127,7 +127,7 @@ void exec_div(rs *RS)
     {
         RS->res = (RS->Vk_ != 0) ? (RS->Vj_ / RS->Vk_) : (-1);
 
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_beq(rs *RS)
@@ -142,7 +142,7 @@ void exec_beq(rs *RS)
         }
 
         branch_issued = false;
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_jal_jalr(rs *RS)
@@ -167,7 +167,7 @@ void exec_jal_jalr(rs *RS)
             break;
         }
         stall = false;
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_neg(rs *RS)
@@ -175,7 +175,7 @@ void exec_neg(rs *RS)
     if (++RS->cycles_counter_ >= NC_EXEC_NEG)
     {
         RS->res = (~RS->Vj_) + 1;
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }
 void exec_abs(rs *RS)
@@ -183,6 +183,6 @@ void exec_abs(rs *RS)
     if (++RS->cycles_counter_ >= NC_EXEC_ABS)
     {
         RS->res = (((signed short)RS->Vj_) < 0) ? -RS->Vj_ : RS->Vj_;
-        save_finish_exec_cycle(RS);
+        record_finish_exec_cycle(RS);
     }
 }

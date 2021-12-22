@@ -9,10 +9,11 @@ struct instruction;
 // rs.cpp
 extern void initalize_station_name(std::vector<rs> &stations, const std::string &base_name);
 extern void initalize_rstable();
-extern void get_dynamic_hardware_params();
+extern void get_hardware_params();
 
 // decode.cpp
-extern void fetch_instructions(const std::string &file_name);
+extern void read_instructions(const std::string &file_name);
+extern void read_data_mem(const std::string &file_name);
 extern ushort decode_reg(const std::string &reg_str);
 extern void decode_line(const std::string &line, instruction &inst);
 
@@ -21,14 +22,14 @@ extern void emit_error(const std::string &err);
 extern void toupper(std::string &str);
 extern void print_regfile();
 extern void print_data_mem();
-
+extern bool isNumber(const std::string &str);
 // input: function pointer
 // output: iterates on all units and executes the func.
 extern void iterate_on_stations(void (*func)(rs &st, void *p), void *params = nullptr);
 
 // update.cpp
 extern void update_stations();
-extern void update_finished();
+extern void update_program_finished();
 extern void broadcast();
 extern void flush_stations(uint start_pc);
 extern void save_regstate();

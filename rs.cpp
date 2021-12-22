@@ -125,6 +125,8 @@ void initalize_station_name(std::vector<rs> &stations, const std::string &base_n
 }
 void initalize_rstable()
 {
+    get_hardware_params();
+
     rstable.load.resize(N_LOAD, rs( // NC_EXEC_LOAD, NC_WB_LOAD,
                                     issue_load, can_exec_load, exec_load, wb_regfile));
     initalize_station_name(rstable.load, "LOAD");
@@ -157,9 +159,23 @@ void initalize_rstable()
                                   issue_div, can_exec_div, exec_div, wb_regfile));
     initalize_station_name(rstable.div, "DIV");
 }
-void get_dynamic_hardware_params()
 
+static void get_unit_params(int &num, const std::string &prompt)
 {
+
+    std::cout << prompt;
+    std::cin >> num;
+    while (num <= 0)
+    {
+        std::cout << "Number must be greater than zero\n";
+        std::cout << prompt + ": ";
+        std::cin >> num;
+    }
+}
+
+void get_hardware_params()
+{
+
     char answer = 'x';
     std::cout << "Do you want to customize the hardware?(y/n)";
     std::cin >> answer;
@@ -171,10 +187,29 @@ void get_dynamic_hardware_params()
         std::cin >> answer;
         answer = toupper(answer);
     }
+
     if (answer == 'Y')
     {
-        std::cout << "Enter NC for div: ";
-        std::cin >> NC_EXEC_DIV;
+
+        std::string unit_names[] = {"store", "beq", "abs", "add/i", "jal/r", "div", "neg"};
+        int *N[] = {&N_STORE, &N_BEQ, &N_ABS, &N_ADD, &N_JAL, &N_DIV, &N_NEG};
+        int *NC_EXEC[] = {&NC_EXEC_STORE, &NC_EXEC_BEQ, &NC_EXEC_ABS, &NC_EXEC_ADD, &NC_EXEC_JAL, &NC_EXEC_DIV, &NC_EXEC_NEG};
+        const int size = sizeof(unit_names) / sizeof(unit_names[0]);
+
+        // prompt msgs
+        std::string base_prompt = "Enter number of ";
+        std::string n_stations_prompt = base_prompt + "reservation stations for ";
+        std::string nc_exec_prompt = base_prompt + "execution cycles for ";
+
+        get_unit_params(N_LOAD, n_stations_prompt + "load");
+        get_unit_params(NC_EXEC_ADDRESS_LOAD, base_prompt + "computing address for load");
+        get_unit_params(NC_EXEC_MEM_LOAD, base_prompt + "reading from memory for load");
+        for (int i = 0; i < size; i++)
+        {
+            get_unit_params(*N[i], n_stations_prompt + unit_names[i] + ": ");
+            get_unit_params(*NC_EXEC[i], nc_exec_prompt + unit_names[i] + ": ");
+        }
+        get_unit_params(NC_WB_REGFILE, base_prompt + "cycles writing to regfile: ");
+        get_unit_params(NC_WB_MEM, base_prompt + "cycles for writing to memory: ");
     }
-    // left empty for now
 }
