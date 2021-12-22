@@ -10,10 +10,11 @@ void fetch_instructions(const std::string &file_name)
         emit_error("Couldn't open file");
 
     std::string line;
-
+    int pc = 0;
     while (std::getline(inf, line))
     {
         instruction new_inst;
+        new_inst.pc = pc++;
         decode_line(line, new_inst);
         inst_mem.push_back(new_inst);
     }
@@ -49,7 +50,6 @@ void decode_line(const std::string &line, instruction &inst)
 
     inst.name = name;
     inst.op = inst_op_map[name];
-    inst.pc = PC;
 
     if (name == "ADD" || name == "DIV")
     {

@@ -71,8 +71,11 @@ void save_regstate()
 
 static void flush_helper(rs &st, void *p_address)
 {
+    if (st.state_ == IDLE)
+        return;
+
     uint *pc_address = (uint *)p_address;
-    if (st.inst_->pc > *pc_address)
+    if (st.inst_ != nullptr && st.inst_->pc > *pc_address)
         st.reset();
 }
 static void undo_regstate()
@@ -131,6 +134,7 @@ static void broadcast_to_regstat()
         {
             regs[r] = cdb::rd;
             regstat[r].Qi = nullptr;
+            regstat_copy[r].Qi = nullptr;
             return;
         }
 }

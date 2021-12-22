@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/tomasulo",
-      "args": ["tests/jal_jalr.txt"],
+      "args": ["tests/beq.txt"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

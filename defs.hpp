@@ -68,5 +68,7 @@ extern bool can_exec_abs(rs *);
 // wb.cpp
 extern void wb_mem(rs *);
 extern void wb_regfile(rs *);
+extern void wb_beq(rs *);
+extern void wb_jal_jalr(rs *);
 
 #endif

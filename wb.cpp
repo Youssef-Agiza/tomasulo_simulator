@@ -5,31 +5,45 @@
 int NC_WB_REGFILE = DEFAULT_NC_WB_REGFILE;
 int NC_WB_MEM = DEFAULT_NC_WB_MEM;
 
-void wb_mem(rs *st)
+static void save_wb_cycle(rs *RS)
 {
-    ++st->cycles_counter_;
-    if (st->Qk_ != nullptr || st->cycles_counter_ < NC_WB_MEM)
-        return;
-
-    data_mem[st->imm_ % MEMORY_SIZE] = st->Vk_;
-    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
-    st->state_ = FINISHED;
+    RS->inst_->wb_cycle = RS->cycles_counter_ + RS->inst_->exec_finish_cycle;
+    RS->state_ = FINISHED;
 }
 
-void wb_regfile(rs *st)
+void wb_mem(rs *RS)
+{
+    ++RS->cycles_counter_;
+    if (RS->Qk_ != nullptr || RS->cycles_counter_ < NC_WB_MEM)
+        return;
+
+    data_mem[RS->imm_ % MEMORY_SIZE] = RS->Vk_;
+    save_wb_cycle(RS);
+}
+
+void wb_regfile(rs *RS)
 {
 
-    st->cycles_counter_++;
+    RS->cycles_counter_++;
 
     if (cdb::available == false)
         return;
     cdb::available = false;
-    cdb::rd = st->res;
-    st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
-    cdb::st = st;
-    st->state_ = FINISHED;
-}
+    cdb::rd = RS->res;
+    cdb::st = RS;
 
+    save_wb_cycle(RS);
+}
+void wb_beq(rs *RS)
+{
+    PC = RS->res;
+    save_wb_cycle(RS);
+}
+void wb_jal_jalr(rs *RS)
+{
+    PC = RS->inst_->pc + 1;
+    wb_regfile(RS);
+}
 // int NC_WB_LOAD = DEFAULT_NC_WB_LOAD;
 // int NC_WB_STORE = DEFAULT_NC_WB_STORE;
 // int NC_WB_BEQ = DEFAULT_NC_WB_BEQ;
@@ -39,42 +53,42 @@ void wb_regfile(rs *st)
 // int NC_WB_ABS = DEFAULT_NC_WB_ABS;
 // int NC_WB_DIV = DEFAULT_NC_WB_DIV;
 
-// void wb_load(rs *st) {}
-// void wb_store(rs *st) {}
-// void wb_beq(rs *st)
+// void wb_load(rs *RS) {}
+// void wb_store(rs *RS) {}
+// void wb_beq(rs *RS)
 // {
 
 // }
-// void wb_add_addi(rs *st)
+// void wb_add_addi(rs *RS)
 // {
 // #ifdef DEBUGGING
-//     // st->print();
+//     // RS->print();
 // #endif
 
-//     st->cycles_counter_++;
+//     RS->cycles_counter_++;
 
 //     if (cdb::available == false)
 //         return;
-//     st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
+//     RS->inst_->wb_cycle = RS->cycles_counter_ + RS->inst_->exec_finish_cycle;
 //     cdb::available = false;
-//     cdb::rd = st->res;
-//     cdb::st = st;
-//     st->state_ = FINISHED;
+//     cdb::rd = RS->res;
+//     cdb::RS = RS;
+//     RS->state_ = FINISHED;
 // }
-// void wb_div(rs *st)
+// void wb_div(rs *RS)
 // {
-//     st->cycles_counter_++;
+//     RS->cycles_counter_++;
 
 //     if (cdb::available == false)
 //         return;
-//     st->inst_->wb_cycle = st->cycles_counter_ + st->inst_->exec_finish_cycle;
+//     RS->inst_->wb_cycle = RS->cycles_counter_ + RS->inst_->exec_finish_cycle;
 //     cdb::available = false;
-//     cdb::rd = st->res;
-//     cdb::st = st;
+//     cdb::rd = RS->res;
+//     cdb::RS = RS;
 // }
-// void wb_jal_jalr(rs *st) {}
-// void wb_neg(rs *st) {}
-// void wb_abs(rs *st) {}
+// void wb_jal_jalr(rs *RS) {}
+// void wb_neg(rs *RS) {}
+// void wb_abs(rs *RS) {}
 
 // if (++cycles_counter_ >= nc_wb_ && cdb::available)
 // {

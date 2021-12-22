@@ -137,13 +137,12 @@ void exec_beq(rs *RS)
     {
         if (RS->Vj_ == RS->Vk_)
         {
-            PC = RS->inst_->pc + RS->imm_ + 1;
+            RS->res = RS->inst_->pc + RS->imm_ + 1;
             flush_stations(RS->inst_->pc);
         }
 
         branch_issued = false;
         save_finish_exec_cycle(RS);
-        RS->state_ = FINISHED;
     }
 }
 void exec_jal_jalr(rs *RS)
@@ -154,14 +153,14 @@ void exec_jal_jalr(rs *RS)
         {
         case JAL_OP:
         {
-            RS->res = RS->inst_->pc + 1;
-            PC = RS->imm_ + 1 + PC;
+            // RS->res = RS->inst_->pc + 1;
+            RS->res = RS->imm_ + 1 + PC;
             break;
         }
         case JALR_OP:
         {
-            RS->res = RS->inst_->pc + 1;
-            PC = RS->Vj_;
+            // RS->res = RS->inst_->pc + 1;
+            RS->res = RS->Vj_;
             break;
         }
         default:

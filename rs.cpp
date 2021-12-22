@@ -134,11 +134,11 @@ void initalize_rstable()
     initalize_station_name(rstable.store, "STORE");
 
     rstable.beq.resize(N_BEQ, rs( // NC_EXEC_BEQ, NC_WB_BEQ,
-                                  issue_beq, can_exec_beq, exec_beq, nullptr));
+                                  issue_beq, can_exec_beq, exec_beq, wb_beq));
     initalize_station_name(rstable.beq, "BEQ");
 
     rstable.jal_jalr.resize(N_JAL, rs( // NC_EXEC_JAL, NC_WB_JAL,
-                                       issue_jal_jalr, can_exec_jal_jalr, exec_jal_jalr, wb_regfile));
+                                       issue_jal_jalr, can_exec_jal_jalr, exec_jal_jalr, wb_jal_jalr));
     initalize_station_name(rstable.jal_jalr, "JAL/JALR");
 
     rstable.abs.resize(N_ABS, rs( // NC_EXEC_ABS, NC_WB_ABS,
