@@ -10,10 +10,11 @@ TEST_DIR= tests
 TESTS= beq.txt
 OUTPUT_DIR= results
 RESULTS= $(OUTPUT_DIR)/beq.txt\
+			$(OUTPUT_DIR)/load_store.txt \
 			$(OUTPUT_DIR)/jal_jalr.txt\
 			$(OUTPUT_DIR)/loop.txt\
 			$(OUTPUT_DIR)/diffPc.txt\
-			$(OUTPUT_DIR)/deps.txt
+			$(OUTPUT_DIR)/deps.txt\
 
 tomasulo: $(HEADERS) $(SRCS)
 		$(GCC) $(SRCS) $(FLAGS) -o  $(TARGET)

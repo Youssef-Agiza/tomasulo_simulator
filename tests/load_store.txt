@@ -1,0 +1,9 @@
+ADDI x1 x0 1
+ADDI x2 x0 2
+ADDI x3 x0 3
+STORE x3 x0 0  #store 3 in mem[0]
+LOAD x4 x0 1   #No conflict: load 0 to x4 from mem[1]
+STORE x2 x0 1  # conflict: store 2 to mem[1]
+LOAD x5 x0 1   # Conflict: load 2 to x5 from mem[1]
+STORE x2 x0 2  #no conflict: store 2 to mem[2]
+STORE x1 x0 2  #conflict: store 1 to mem[2]

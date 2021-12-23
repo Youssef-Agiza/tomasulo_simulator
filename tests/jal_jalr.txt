@@ -1,8 +1,8 @@
 ADDI x1 x0 1
 ADDI x5 x0 4
-JAL  x2 3
-ADDI x3 x0 -1
+JAL  x2 3 # will skip the following 3 lines
+ADDI x3 x0 -1 ## the jalr will return here
 ADDI x3 x0 5
-JAL  x2 2 
+JAL  x2 2 #will skip the jalr to break the loop
 ADD  x4 x1 x1
-JALR x6 x5
+JALR x6 x2 #will jump after the first jal

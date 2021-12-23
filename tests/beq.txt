@@ -1,7 +1,9 @@
 ADDI x1 x0 1
 ADDI x2 x0 1
+BEQ  x1 x1 1
+ADD  x4 x0 -1
 BEQ  x1 x2 2  #taken
-BEQ  x1 x2 0  #not taken
+BEQ  x1 x2 0  #skipped 
 ADDI x4 x0 -1 #skipped
 ADDI x3 x0 5  #executed
 BEQ  x1 x0 1  #not taken
