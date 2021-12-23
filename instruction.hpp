@@ -2,17 +2,29 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 #include "common.hpp"
-#include "params.h"
+
+#define NO_OP 0x0
+#define ADD_OP 0x1
+#define ADDI_OP 0x2
+#define JAL_OP 0x3
+#define JALR_OP 0x4
+#define LOAD_OP 0x5
+#define STORE_OP 0x6
+#define BEQ_OP 0x7
+#define DIV_OP 0x8
+#define NEG_OP 0x9
+#define ABS_OP 0xA
 
 struct instruction
 {
     std::string name;
     ushort op;
-    ushort rd;
-    ushort rs1;
-    ushort rs2;
+    short rd;
+    short rs1;
+    short rs2;
     int imm;
-    uint pc;
+    int pc;
+    bool executed;
     int issue_cycle;
     int exec_start_cycle;
     int exec_finish_cycle;
@@ -26,6 +38,7 @@ struct instruction
     {
         name = "";
         op = NO_OP;
+        executed = false;
         rd = -1;
         rs1 = -1;
         rs2 = -1;
@@ -35,21 +48,6 @@ struct instruction
         issue_cycle = -1;
         exec_finish_cycle = -1;
         wb_cycle = -1;
-    }
-    static void print_header()
-    {
-        using std::setw;
-        static const int w = 15;
-        std::cout << setw(w) << "name" << setw(w) << "rd" << setw(w) << "rs1" << setw(w) << "rs2" << setw(w) << "imm"
-                  << setw(w) << "issue" << setw(w) << "exec1" << setw(w) << "exec2" << setw(w) << "wb"
-                  << "\n";
-    }
-    void print()
-    {
-        using std::setw;
-        static const int w = 15;
-        std::cout << setw(w) << name << setw(w) << (signed short)rd << setw(w) << (signed short)rs1 << setw(w) << (signed short)rs2 << setw(w) << imm
-                  << setw(w) << issue_cycle << setw(w) << exec_start_cycle << setw(w) << exec_finish_cycle << setw(w) << wb_cycle << "\n";
     }
 };
 

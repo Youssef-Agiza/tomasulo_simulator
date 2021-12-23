@@ -10,7 +10,7 @@ static void record_wb_cycle(rs *RS)
     RS->inst_->wb_cycle = RS->cycles_counter_ + RS->inst_->exec_finish_cycle;
     RS->state_ = FINISHED;
 }
-static void loack_cdb(rs *RS)
+static void lock_cdb(rs *RS)
 {
     cdb::available = false;
     cdb::rd = RS->res;
@@ -33,12 +33,17 @@ void wb_regfile(rs *RS)
     if (++RS->cycles_counter_ < NC_WB_REGFILE || cdb::available == false)
         return;
 
-    loack_cdb(RS);
+    lock_cdb(RS);
     record_wb_cycle(RS);
 }
 void wb_beq(rs *RS)
 {
-    PC = RS->res;
+    if (RS->branch_taken_)
+    {
+        flush_stations(RS->inst_->pc);
+        stall = false;
+        PC = RS->res;
+    }
     record_wb_cycle(RS);
 }
 void wb_jal_jalr(rs *RS)
@@ -46,8 +51,10 @@ void wb_jal_jalr(rs *RS)
     if (++RS->cycles_counter_ < NC_WB_REGFILE || cdb::available == false)
         return;
 
-    PC = RS->inst_->pc + 1;
-    loack_cdb(RS);
+    PC = RS->res;
+    stall = false;
+    RS->res = RS->inst_->pc + 1;
+    lock_cdb(RS);
 
     record_wb_cycle(RS);
 }

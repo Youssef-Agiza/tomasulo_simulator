@@ -50,6 +50,7 @@ void rs::reset()
     Qk_ = nullptr;
 
     comuted_A_ = false;
+    branch_taken_ = false;
 }
 void rs::update_state()
 {
@@ -63,6 +64,7 @@ void rs::update_state()
         if (can_exec_(this))
         {
             this->inst_->exec_start_cycle = cycles_counter_ + this->inst_->issue_cycle;
+            this->inst_->executed = true;
             this->state_ = EXECUTING;
             cycles_counter_ = 0;
         }
@@ -74,13 +76,6 @@ void rs::update_state()
     {
         exec_(this);
 
-        // if (++cycles_counter_ >= nc_exec_)
-        // {
-        //     this->inst_->exec_finish_cycle = cycles_counter_ + this->inst_->exec_start_cycle;
-        //     this->state_ = WRITING;
-        //     this->imm_ = this->imm_ + this->Vj_;
-        //     cycles_counter_ = 0;
-        // }
         if (this->state_ != FINISHED)
             return;
     }
@@ -91,13 +86,7 @@ void rs::update_state()
             wb_(this);
         else
             state_ = FINISHED;
-        // if (++cycles_counter_ >= nc_wb_ && cdb::available)
-        // {
-        //     this->inst_->wb_cycle = cycles_counter_ + this->inst_->exec_finish_cycle;
-        //     cdb::available = false;
-        //     wb_(this);
-        //     reset();
-        // }
+
         if (this->state_ != FINISHED)
             return;
     }

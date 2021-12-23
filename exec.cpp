@@ -137,8 +137,9 @@ void exec_beq(rs *RS)
     {
         if (RS->Vj_ == RS->Vk_)
         {
+            RS->branch_taken_ = true;
+            misprediction_count++;
             RS->res = RS->inst_->pc + RS->imm_ + 1;
-            flush_stations(RS->inst_->pc);
         }
 
         branch_issued = false;
@@ -166,7 +167,6 @@ void exec_jal_jalr(rs *RS)
         default:
             break;
         }
-        stall = false;
         record_finish_exec_cycle(RS);
     }
 }

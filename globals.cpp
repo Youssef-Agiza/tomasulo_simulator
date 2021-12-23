@@ -1,7 +1,7 @@
 #include "globals.hpp"
 
 // regs.hpp
-ushort regs[REGFILE_SIZE];
+short regs[REGFILE_SIZE];
 struct RegStat regstat[REGFILE_SIZE];
 struct RegStat regstat_copy[REGFILE_SIZE];
 
@@ -12,7 +12,7 @@ std::vector<instruction> inst_mem;
 
 // cdb.hpp
 bool cdb::available = true;
-ushort cdb::rd = -1;
+short cdb::rd = -1;
 rs *cdb::st = nullptr;
 
 // globals.hpp
@@ -22,6 +22,8 @@ int cycles = 0;
 bool stall = false;
 bool finished = false;
 bool branch_issued = false;
+int misprediction_count = 0;
+int branch_count = 0;
 std::unordered_map<std::string, ushort> inst_op_map({
     {"LOAD", LOAD_OP},
     {"STORE", STORE_OP},

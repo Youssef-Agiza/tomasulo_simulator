@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/tomasulo",
-      "args": ["tests/inst.txt"],
+      "args": ["tests/loop.txt"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],

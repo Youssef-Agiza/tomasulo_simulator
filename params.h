@@ -3,18 +3,7 @@
 #define PARAMS_H
 
 #define DEBUGGING
-
-#define NO_OP 0x0
-#define ADD_OP 0x1
-#define ADDI_OP 0x2
-#define JAL_OP 0x3
-#define JALR_OP 0x4
-#define LOAD_OP 0x5
-#define STORE_OP 0x6
-#define BEQ_OP 0x7
-#define DIV_OP 0x8
-#define NEG_OP 0x9
-#define ABS_OP 0xA
+#define EXTRA_INFO
 
 // number of units
 #define DEFAULT_N_LOAD 2
@@ -41,13 +30,33 @@
 #define DEFAULT_NC_WB_REGFILE 1
 #define DEFAULT_NC_WB_MEM 2
 
-// #define DEFAULT_NC_WB_LOAD 2
-// #define DEFAULT_NC_WB_STORE 2
-// #define DEFAULT_NC_WB_BEQ 1
-// #define DEFAULT_NC_WB_JAL 1
-// #define DEFAULT_NC_WB_ADD 1
-// #define DEFAULT_NC_WB_NEG 1
-// #define DEFAULT_NC_WB_ABS 1
-// #define DEFAULT_NC_WB_DIV 1
+// number of stations for each unit
+// rs.cpp
+extern int N_LOAD;
+extern int N_STORE;
+extern int N_BEQ;
+extern int N_JAL;
+extern int N_ADD;
+extern int N_NEG;
+extern int N_ABS;
+extern int N_DIV;
+
+// number of execution cycles for each station
+// exec.cpp
+extern int NC_EXEC_ADDRESS_LOAD;
+extern int NC_EXEC_MEM_LOAD;
+extern int NC_EXEC_STORE;
+extern int NC_EXEC_BEQ;
+extern int NC_EXEC_JAL;
+extern int NC_EXEC_ADD;
+extern int NC_EXEC_NEG;
+extern int NC_EXEC_ABS;
+extern int NC_EXEC_DIV;
+
+// number of write back cycles for each station
+// wb.cpp
+
+extern int NC_WB_REGFILE;
+extern int NC_WB_MEM;
 
 #endif

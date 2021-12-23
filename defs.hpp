@@ -14,16 +14,19 @@ extern void get_hardware_params();
 // decode.cpp
 extern void read_instructions(const std::string &file_name);
 extern void read_data_mem(const std::string &file_name);
-extern ushort decode_reg(const std::string &reg_str);
+extern short decode_reg(const std::string &reg_str);
 extern void decode_line(const std::string &line, instruction &inst);
+extern void print_inst_header();
+extern void print_inst(const instruction &inst);
 
 // utils.cpp
 extern void emit_error(const std::string &err);
 extern void toupper(std::string &str);
-extern void print_regfile();
-extern void print_data_mem();
 extern bool isNumber(const std::string &str);
-// input: function pointer
+extern void print_data_mem();
+extern void print_regfile();
+extern void print_instructions_stats();
+// func: function pointer, params: parameters passed to func
 // output: iterates on all units and executes the func.
 extern void iterate_on_stations(void (*func)(rs &st, void *p), void *params = nullptr);
 

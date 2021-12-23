@@ -1,0 +1,8 @@
+ADDI x1 x0 5
+ADDI x2 x0 2
+ADDI x3 x0 3
+ADDI x1 x1 -1
+ADD x3 x3 x2
+BEQ x1 x0 1
+JAL x5 -4
+ADDI x4 x0 4

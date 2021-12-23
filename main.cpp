@@ -19,8 +19,11 @@ int main(int argc, char **argv)
         if (PC < inst_mem.size() && !stall)
         {
 #ifdef DEBUGGING
+
             std::cout << "Trying: ";
-            inst_mem[PC].print();
+            print_inst(inst_mem[PC]);
+            print_regfile();
+
 #endif
             try_issue(inst_mem[PC]);
         }
@@ -28,12 +31,12 @@ int main(int argc, char **argv)
     }
 
 #ifdef DEBUGGING
-    instruction::print_header();
-    for (auto &inst : inst_mem)
-        inst.print();
+    // instruction::print_header();
+    // for (auto &inst : inst_mem)
+    //     inst.print();
     print_regfile();
     print_data_mem();
 #endif
-
+    print_instructions_stats();
     return 0;
 }

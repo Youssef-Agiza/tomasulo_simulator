@@ -7,7 +7,7 @@ void read_data_mem(const std::string &file_name)
 {
     std::ifstream inf(file_name);
     if (inf.fail())
-        emit_error("Couldn't data memory file");
+        emit_error("Couldn't open data memory file");
 
     std::string line, addr, val;
 
@@ -47,7 +47,7 @@ void read_instructions(const std::string &file_name)
     inf.close();
 }
 
-ushort decode_reg(const std::string &reg_str)
+short decode_reg(const std::string &reg_str)
 {
     try
     {
@@ -76,47 +76,47 @@ void decode_line(const std::string &line, instruction &inst)
     inst.name = name;
     inst.op = inst_op_map[name];
 
-    if (name == "ADD" || name == "DIV")
+    if (inst.op == ADD_OP || inst.op == DIV_OP)
     {
         ss >> rd >> rs1 >> rs2;
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
         inst.rs2 = decode_reg(rs2);
     }
-    if (name == "NEG" || name == "ABS" || name == "JALR")
+    if (inst.op == NEG_OP || inst.op == ABS_OP || inst.op == JALR_OP)
     {
         ss >> rd >> rs1;
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
     }
-    if (name == "ADDI")
+    if (inst.op == ADDI_OP)
     {
         ss >> rd >> rs1 >> imm;
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
         inst.imm = std::stoi(imm);
     }
-    if (name == "LOAD")
+    if (inst.op == LOAD_OP)
     {
         ss >> rd >> imm >> rs1;
         inst.rd = decode_reg(rd);
         inst.imm = std::stoi(imm);
         inst.rs1 = decode_reg(rs1);
     }
-    if (name == "JAL")
+    if (inst.op == JAL_OP)
     {
         ss >> rd >> imm;
         inst.rd = decode_reg(rd);
         inst.imm = std::stoi(imm);
     }
-    if (name == "STORE")
+    if (inst.op == STORE_OP)
     {
         ss >> rs2 >> imm >> rs1;
         inst.rs2 = decode_reg(rs2);
         inst.imm = std::stoi(imm);
         inst.rs1 = decode_reg(rs1);
     }
-    if (name == "BEQ")
+    if (inst.op == BEQ_OP)
     {
         ss >> rs1 >> rs2 >> imm;
         inst.rs2 = decode_reg(rs2);

@@ -25,17 +25,18 @@ public:
     std::string name_;
     ushort op_;
 
-    ushort Vj_;
+    short Vj_;
     rs *Qj_;
 
-    ushort Vk_;
+    short Vk_;
     rs *Qk_;
 
-    uint imm_;
+    int imm_;
     ushort A_; // address
     bool comuted_A_;
+    bool branch_taken_;
 
-    uint res; // result
+    int res; // result
 
 private:
     void (*issue_)(rs *);

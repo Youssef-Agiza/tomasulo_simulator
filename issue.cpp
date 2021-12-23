@@ -55,6 +55,7 @@ void issue_beq(rs *st)
     st->state_ = BUSY;
 
     branch_issued = true;
+    branch_count++;
     save_regstate();
 
     if (regstat[inst->rs1].Qi != nullptr)
@@ -79,7 +80,7 @@ void issue_jal_jalr(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (inst->name == "JALR")
+    if (inst->op == JALR_OP)
     {
 
         if (regstat[inst->rs1].Qi != nullptr)
@@ -91,7 +92,7 @@ void issue_jal_jalr(rs *st)
         }
         st->op_ = JALR_OP;
     }
-    else if (inst->name == "JAL")
+    else if (inst->op == JAL_OP)
     {
 
         st->imm_ = inst->imm;

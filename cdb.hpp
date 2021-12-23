@@ -6,7 +6,7 @@
 struct cdb
 {
     static rs *st;
-    static ushort rd;
+    static short rd;
     static bool available;
 };
 

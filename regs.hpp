@@ -6,7 +6,7 @@ struct rs;
 #define REG_SIZE 16
 #define REGFILE_SIZE 8
 
-extern ushort regs[REGFILE_SIZE];
+extern short regs[REGFILE_SIZE];
 
 struct RegStat
 {

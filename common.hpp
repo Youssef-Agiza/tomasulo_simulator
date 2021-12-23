@@ -15,5 +15,6 @@
 #include <unordered_map>
 
 #include "types.hpp"
+#include "params.h"
 
 #endif
