@@ -1,0 +1,8 @@
+ADDI x1 x0 -1
+ADDI x2 x0 -1
+ADDI x3 x0 -1
+ADDI x4 x0 -1
+ADDI x5 x0  5 #set PC=4 to start here
+ADDI x6 x0  6
+ADDI x7 x0  7
+

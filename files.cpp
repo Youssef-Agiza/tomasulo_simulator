@@ -7,11 +7,10 @@ void read_data_mem(const std::string &file_name)
 {
     std::ifstream inf(file_name);
     if (inf.fail())
-        emit_error("Couldn't open data memory file");
+        emit_error("Error: Couldn't open data memory file");
 
     std::string line, addr, val;
-
-    std::cout << std::setw(20) << std::setfill('-') << std::setw(20) << "READING MEMORY DATA" << std::setw(20) << "\n";
+    std::cout << std::setw(20) << std::setw(20) << "READING DATA MEMORY FROM " << file_name << "...." << std::setw(20) << "\n";
 
     while (std::getline(inf, line))
     {
@@ -32,12 +31,15 @@ void read_instructions(const std::string &file_name)
 {
     std::ifstream inf(file_name);
     if (inf.fail())
-        emit_error("Couldn't instructions file");
+        emit_error("Error: Couldn't open instructions file");
 
     std::string line;
     int pc = 0;
     while (std::getline(inf, line))
     {
+        if (line.empty())
+            continue;
+
         instruction new_inst;
         new_inst.pc = pc++;
         decode_line(line, new_inst);
@@ -89,19 +91,12 @@ void decode_line(const std::string &line, instruction &inst)
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
     }
-    if (inst.op == ADDI_OP)
+    if (inst.op == ADDI_OP || inst.op == LOAD_OP)
     {
         ss >> rd >> rs1 >> imm;
         inst.rd = decode_reg(rd);
         inst.rs1 = decode_reg(rs1);
         inst.imm = std::stoi(imm);
-    }
-    if (inst.op == LOAD_OP)
-    {
-        ss >> rd >> imm >> rs1;
-        inst.rd = decode_reg(rd);
-        inst.imm = std::stoi(imm);
-        inst.rs1 = decode_reg(rs1);
     }
     if (inst.op == JAL_OP)
     {
@@ -111,7 +106,7 @@ void decode_line(const std::string &line, instruction &inst)
     }
     if (inst.op == STORE_OP)
     {
-        ss >> rs2 >> imm >> rs1;
+        ss >> rs2 >> rs1 >> imm;
         inst.rs2 = decode_reg(rs2);
         inst.imm = std::stoi(imm);
         inst.rs1 = decode_reg(rs1);
@@ -126,4 +121,31 @@ void decode_line(const std::string &line, instruction &inst)
 #ifdef DEBUGGING
     // inst.print();
 #endif
+}
+
+void output_to_file(const std::string &filename)
+{
+    // char answer;
+    // std::cout << "Would you like to save the results to a file?(y/n)";
+    // std::cin >> answer;
+    // answer = toupper(answer);
+    // while (answer != 'Y' && answer != 'N')
+    // {
+    //     std::cout << "Would you like to save the results to a file?(y/n)";
+    //     std::cin >> answer;
+    //     answer = toupper(answer);
+    // }
+    // if (answer == 'N')
+    //     return;
+    //     if(filen)
+    // std::string fname;
+    // std::cout << "Enter file name: ";
+    // std::cin >> fname;
+    std::ofstream outf(filename);
+    if (outf.fail())
+        emit_error("Error opening output file.");
+
+    print_regfile(outf);
+    print_data_mem(outf);
+    print_instructions_stats(outf);
 }

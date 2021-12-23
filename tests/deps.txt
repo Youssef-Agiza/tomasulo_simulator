@@ -1,0 +1,11 @@
+ADDI  x0 x0 9 
+ADDI  x1 x0 12 
+ADDI  x2 x0 3
+STORE x1 x0 3  #store 12 at mem[4]
+LOAD  x3 x2 0  #load 12 to x3
+DIV   x4 x1 x2 #x4= 12/3
+NEG   x5 x4    #x5=-4
+ABS   x6 x5    #x6=4
+JAL   x0 1     #skip next line
+ADD   x0 x4 x3 #x0=0(hard wired)
+ADDI  x7 x0 2  #x7=2

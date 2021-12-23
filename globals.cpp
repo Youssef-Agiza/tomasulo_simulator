@@ -6,8 +6,8 @@ struct RegStat regstat[REGFILE_SIZE];
 struct RegStat regstat_copy[REGFILE_SIZE];
 
 // mem.hpp
-std::vector<uint> data_mem(MEMORY_SIZE, 0);
-// uint data_mem[MEMORY_SIZE];
+// std::vector<uint> data_mem(MEMORY_SIZE, 0);
+uint data_mem[MEMORY_SIZE] = {0};
 std::vector<instruction> inst_mem;
 
 // cdb.hpp

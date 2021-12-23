@@ -2,8 +2,7 @@
 #ifndef PARAMS_H
 #define PARAMS_H
 
-#define DEBUGGING
-#define EXTRA_INFO
+// #define DEBUGGING
 
 // number of units
 #define DEFAULT_N_LOAD 2

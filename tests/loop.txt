@@ -1,8 +1,8 @@
-ADDI x1 x0 5
+ADDI x1 x0 5 #intialize x1 to 5
 ADDI x2 x0 2
 ADDI x3 x0 3
-ADDI x1 x1 -1
+ADDI x1 x1 -1 #decrement x1 by 1
 ADD x3 x3 x2
-BEQ x1 x0 1
-JAL x5 -4
+BEQ x1 x0 1 #loop until x1=0(5 times)
+JAL x5 -4  
 ADDI x4 x0 4
