@@ -20,9 +20,8 @@ int main(int argc, char **argv)
         {
 #ifdef DEBUGGING
 
-            std::cout << "Trying: ";
+            std::cout << "Trying to issue: ";
             print_inst(inst_mem[PC]);
-            print_regfile();
 
 #endif
             try_issue(inst_mem[PC]);

@@ -1,7 +1,7 @@
 #include "globals.hpp"
 
 // regs.hpp
-short regs[REGFILE_SIZE];
+short regs[REGFILE_SIZE] = {0};
 struct RegStat regstat[REGFILE_SIZE];
 struct RegStat regstat_copy[REGFILE_SIZE];
 

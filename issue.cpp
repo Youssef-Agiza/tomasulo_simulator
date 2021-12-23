@@ -9,7 +9,7 @@ void issue_load(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
@@ -25,14 +25,14 @@ void issue_store(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
         st->Vj_ = regs[inst->rs1];
         st->Qj_ = nullptr;
     }
-    if (regstat[inst->rs2].Qi != nullptr)
+    if (inst->rs2 != 0 && regstat[inst->rs2].Qi != nullptr)
         st->Qk_ = regstat[inst->rs2].Qi;
     else
     {
@@ -58,14 +58,14 @@ void issue_beq(rs *st)
     branch_count++;
     save_regstate();
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
         st->Vj_ = regs[inst->rs1];
         st->Qj_ = nullptr;
     }
-    if (regstat[inst->rs2].Qi != nullptr)
+    if (inst->rs2 != 0 && regstat[inst->rs2].Qi != nullptr)
         st->Qk_ = regstat[inst->rs2].Qi;
     else
     {
@@ -83,7 +83,7 @@ void issue_jal_jalr(rs *st)
     if (inst->op == JALR_OP)
     {
 
-        if (regstat[inst->rs1].Qi != nullptr)
+        if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
             st->Qk_ = regstat[inst->rs1].Qi;
         else
         {
@@ -108,7 +108,7 @@ void issue_add_addi(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
@@ -118,7 +118,7 @@ void issue_add_addi(rs *st)
     if (inst->name == "ADD")
     {
 
-        if (regstat[inst->rs2].Qi != nullptr)
+        if (inst->rs2 != 0 && regstat[inst->rs2].Qi != nullptr)
             st->Qk_ = regstat[inst->rs2].Qi;
         else
         {
@@ -141,7 +141,7 @@ void issue_div(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
@@ -149,7 +149,7 @@ void issue_div(rs *st)
         st->Qj_ = nullptr;
     }
 
-    if (regstat[inst->rs2].Qi != nullptr)
+    if (inst->rs2 != 0 && regstat[inst->rs2].Qi != nullptr)
         st->Qk_ = regstat[inst->rs2].Qi;
     else
     {
@@ -164,7 +164,7 @@ void issue_neg(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {
@@ -178,7 +178,7 @@ void issue_abs(rs *st)
     inst = st->inst_;
     st->state_ = BUSY;
 
-    if (regstat[inst->rs1].Qi != nullptr)
+    if (inst->rs1 != 0 && regstat[inst->rs1].Qi != nullptr)
         st->Qj_ = regstat[inst->rs1].Qi;
     else
     {

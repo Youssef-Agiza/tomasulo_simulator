@@ -129,7 +129,7 @@ static void update_finished_helper(rs &st, void *p)
 /****Broad casting helpers*********/
 static void broadcast_to_regstat()
 {
-    for (int r = 0; r < REGFILE_SIZE; r++)
+    for (int r = 1; r < REGFILE_SIZE; r++) // start from 1 to avoid changing R0
         if (regstat[r].Qi == cdb::st)
         {
             regs[r] = cdb::rd;
@@ -140,12 +140,12 @@ static void broadcast_to_regstat()
 }
 static void broadcast_to_station(rs &st, void *p)
 {
-    if (cdb::st == st.Qk_)
+    if (cdb::st == st.Qk_ && st.inst_->rs2 != 0)
     {
         st.Qk_ = nullptr;
         st.Vk_ = cdb::rd;
     }
-    if (cdb::st == st.Qj_)
+    if (cdb::st == st.Qj_ && st.inst_->rs1 != 0)
     {
         st.Qj_ = nullptr;
         st.Vj_ = cdb::rd;

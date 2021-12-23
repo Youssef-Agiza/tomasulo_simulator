@@ -1,5 +1,6 @@
-ADDI x1 x0 9 
+ADDI x0 x0 9 
 ADDI x2 x0 3
+ADDI x1 x0 12
 STORE x1 0 x0
 LOAD x4 0 x2
 DIV x3 x1 x2
