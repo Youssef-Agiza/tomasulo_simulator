@@ -1,9 +1,10 @@
 # Tomasulo Algorithm Simulator
 
 A project by
-**Youssef Agiza: 900192237
-Jacqueline Azar: 900184062
-John El Gallab: 900193761**
+
+- Youssef Agiza: 900192237
+- Jacqueline Azar: 900184062
+- John El Gallab: 900193761
 
 ## Overview
 
@@ -127,8 +128,11 @@ The two main data structure is `class rs`, standing for reservation station, and
 
 ```c++
  void (*issue_)(rs *);
+
  bool (*can_exec_)(rs *);
+
  void (*exec_)(rs *);
+
  void (*wb_)(rs *);
 ```
 
@@ -143,9 +147,9 @@ All the instructions goes through the same life cycle where each instruction sta
 
 The former states are represented using an enum
 
-        ```cpp
-        enum rsstate {IDLE = 0,BUSY,EXECUTING,WRITING,FINISHED};
-        ```
+```cpp
+enum rsstate {IDLE = 0,BUSY,EXECUTING,WRITING,FINISHED};
+```
 
 - **IDLE:** didn't issue
 - **BUSY**: issued but didn't start execution
